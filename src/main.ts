@@ -3,7 +3,7 @@ import App from '@/App.vue'
 import './registerServiceWorker'
 import router from '@/router'
 import store/*, { ActionTypes } */from '@/store'
-// import VueGtag from "vue-gtag";
+import VueGtag from "vue-gtag";
 import vuetify from '@/plugins/vuetify';
 import api from '@/plugins/api';
 import '@/plugins/validator';
@@ -11,11 +11,11 @@ import '@/plugins/validator';
 import CONFIG from '@/config';
 
 async function main() {
-  // if (CONFIG.GOOGLE_ANALYTICS_ID) {
-  //   Vue.use(VueGtag, {
-  //     config: { id: CONFIG.GOOGLE_ANALYTICS_ID }
-  //   }, router);
-  // }
+  if (CONFIG.GOOGLE_ANALYTICS_ID) {
+    Vue.use(VueGtag, {
+      config: { id: CONFIG.GOOGLE_ANALYTICS_ID }
+    }, router);
+  }
 
   // await store.dispatch(ActionTypes.STARTUP);
   // api.errorHandler = (error) => {
