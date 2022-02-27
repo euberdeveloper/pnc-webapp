@@ -5,11 +5,10 @@ import router from '@/router'
 import store/*, { ActionTypes } */from '@/store'
 // import VueGtag from "vue-gtag";
 import vuetify from '@/plugins/vuetify';
-// import '@/plugins/cropper';
 import api from '@/plugins/api';
-// import '@/plugins/validator';
+import '@/plugins/validator';
 
-// import CONFIG from '@/config';
+import CONFIG from '@/config';
 
 async function main() {
   // if (CONFIG.GOOGLE_ANALYTICS_ID) {
