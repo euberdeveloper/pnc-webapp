@@ -5,10 +5,10 @@ import router from '@/router'
 import store/*, { ActionTypes } */from '@/store'
 // import VueGtag from "vue-gtag";
 import vuetify from '@/plugins/vuetify';
-import '@/plugins/cropper';
+// import '@/plugins/cropper';
 // import api from '@/plugins/api';
-import '@/plugins/stored';
-import '@/plugins/validator';
+// import '@/plugins/stored';
+// import '@/plugins/validator';
 
 // import CONFIG from '@/config';
 
