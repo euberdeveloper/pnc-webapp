@@ -10,7 +10,7 @@
         <v-card-actions class="pa-4">
           <v-spacer />
           <v-btn large color="error" @click="cancel">
-            ANNULLA
+            CANCEL
             <v-icon right dark>mdi-cancel</v-icon>
           </v-btn>
           <v-btn large :color="color" @click="confirm" :disabled="disabled">SALVA<v-icon right dark>mdi-content-save</v-icon></v-btn>
