@@ -104,10 +104,10 @@ export const actions: ActionTree<State, State> & Actions = {
         commit(MutationTypes.SET_ALERT_DIALOG, message);
     },
     [ActionTypes.SHOW_ALERT_ERROR]({ dispatch }, text) {
-        dispatch(ActionTypes.SHOW_ALERT_DIALOG, { text, color: 'red' });
+        dispatch(ActionTypes.SHOW_ALERT_DIALOG, { text, color: 'red', title: 'Error' });
     },
     [ActionTypes.SHOW_ALERT_SUCCESS]({ dispatch }, text) {
-        dispatch(ActionTypes.SHOW_ALERT_DIALOG, { text, color: 'green' });
+        dispatch(ActionTypes.SHOW_ALERT_DIALOG, { text, color: 'green', title: 'Success' });
     },
     [ActionTypes.HIDE_CONFIRM_DIALOG]({ commit }) {
         commit(MutationTypes.SET_CONFIRM_DIALOG, null);
