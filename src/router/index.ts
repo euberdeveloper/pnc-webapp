@@ -7,7 +7,7 @@ import beforeEach from './utils/beforeEach';
 
 /* PUBLIC */
 const NotFound = () => import(/* webpackChunkName: "public" */ '@/views/not-found/NotFoundView.vue');
-// const Login = () => import(/* webpackChunkName: "public" */ '@/views/login/LoginView.vue');
+const Login = () => import(/* webpackChunkName: "public" */ '@/views/login/LoginView.vue');
 
 // /* DASHBOARD */
 // const Dashboard = () => import(/* webpackChunkName: "dashboard" */ '@/views/dashboard/Dashboard.vue');
@@ -24,11 +24,11 @@ const routes: Array<RouteConfig> = [
     name: 'root',
     redirect: rootRedirect(true)
   },
-  // {
-  //   path: '/login',
-  //   name: 'login',
-  //   component: Login
-  // },
+  {
+    path: '/login',
+    name: 'login',
+    component: Login
+  },
   // {
   //   path: '/dashboard',
   //   components: {
