@@ -13,9 +13,9 @@
       </template>
     </v-snackbar>
     <!-- DIALOG ALERT MESSAGE -->
-    <pnc-error-dialog v-model="showAlertDialog" :title="alertDialogTitle" :text="alertDialogText" :color="alertDialogColor" />
+    <pnc-alert-dialog v-model="showAlertDialog" :title="alertDialogTitle" :text="alertDialogText" :color="alertDialogColor" />
     <!-- MESSAGES QUEUE -->
-    <pnc-errors-queue v-model="messagesQueue" />
+    <pnc-messages-queue v-model="messagesQueue" />
     <!-- DIALOG CONFIRM -->
     <pnc-confirm-dialog v-if="showConfirmDialog" v-model="showConfirmDialog" :text="confirmDialog.text" :callback="confirmDialog.callback" />
    
@@ -24,7 +24,7 @@
 
 <script lang="ts">
 import { Component, Vue, Watch } from "vue-property-decorator";
-import PncMessageDialog from "@/components/gears/dialogs/PncMessageDialog.vue";
+import PncAlertDialog from "@/components/gears/dialogs/PncAlertDialog.vue";
 import PncMessagesQueue from "@/components/gears/dialogs/PncMessagesQueue.vue";
 import PncConfirmDialog from "@/components/gears/dialogs/PncConfirmDialog.vue";
 
@@ -32,7 +32,7 @@ import { ActionTypes, AlertDialogMessage, QueueMessage } from "@/store";
 
 @Component({
   components: {
-    PncMessageDialog,
+    PncAlertDialog,
     PncMessagesQueue,
     PncConfirmDialog
   },

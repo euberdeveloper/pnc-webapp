@@ -32,7 +32,7 @@ import { Component, Prop } from 'vue-property-decorator';
     event: 'show-updated'
   }
 })
-export default class PncMessageDialog extends Vue {
+export default class PncAlertDialog extends Vue {
   /* PROPS */
 
   @Prop({ type: String, default: 'yellow' })

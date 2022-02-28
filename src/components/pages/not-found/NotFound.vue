@@ -1,7 +1,7 @@
 <template>
   <v-main>
     <!-- IMAGE OF BACKGROUND -->
-    <div class="background" />
+    <div class="background" :style="backgroundStyle" />
 
     <!-- NOT FOUND CONTAINER -->
     <v-container class="fill-height" fluid>
@@ -20,6 +20,8 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 
+import { getRandomNorwayBackground } from "@/utils";
+
 import PncNotFound from '@/components/gears/misc/PncNotFound.vue';
 
 @Component({
@@ -31,8 +33,20 @@ export default class NoFound extends Vue {
   /* DATA */
 
   private showCard = false;
+  private backgroundImage: string | null = null;
+
+  get backgroundStyle() {
+    return {
+      'background': this.backgroundImage ? `url("${this.backgroundImage}") no-repeat center center fixed` : undefined,
+      'background-size': 'cover'
+    };
+  }
 
   /* LIFE CYCLE */
+
+  created() {
+    this.backgroundImage = getRandomNorwayBackground();
+  }
 
   mounted() {
     this.showCard = true;
@@ -48,8 +62,6 @@ export default class NoFound extends Vue {
   width: 100vw;
   height: 100vh;
 
-  background: url("~@/assets/norway_background.jpg") no-repeat center center fixed;
-  background-size: cover;
-  filter: blur(12px);
+  filter: blur(5px);
 }
 </style>
