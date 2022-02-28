@@ -1,15 +1,15 @@
 <template>
-  <users />
+  <courses />
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import Users from "@/components/pages/users/Users.vue";
+import Courses from "@/components/pages/courses/Courses.vue";
 
 @Component({
   components: {
-    Users
+    Courses,
   },
 })
-export default class DashboardUsersView extends Vue {}
+export default class DashboardCoursesView extends Vue {}
 </script>

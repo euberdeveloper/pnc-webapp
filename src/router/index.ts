@@ -14,6 +14,7 @@ const Dashboard = () => import(/* webpackChunkName: "dashboard" */ '@/views/dash
 const DashboardBar = () => import(/* webpackChunkName: "dashboard" */ '@/views/dashboard/DashboardBarView.vue');
 const DashboardMenu = () => import(/* webpackChunkName: "dashboard" */ '@/views/dashboard/DashboardMenuView.vue');
 const DashboardUsers = () => import(/* webpackChunkName: "dashboard" */ '@/views/dashboard/users/DashboardUsersView.vue');
+const DashboardCourses = () => import(/* webpackChunkName: "dashboard" */ '@/views/dashboard/courses/DashboardCoursesView.vue');
 const DashboardNotFound = () => import(/* webpackChunkName: "dashboard" */ '@/views/dashboard/not-found/DashboardNotFoundView.vue');
 
 Vue.use(VueRouter);
@@ -47,6 +48,11 @@ const routes: Array<RouteConfig> = [
         name: 'dashboard-users',
         meta: { authorizedRoles: [UserRole.ADMIN] },
         component: DashboardUsers
+      },
+      {
+        path: 'courses',
+        name: 'dashboard-courses',
+        component: DashboardCourses
       },
       {
         path: '*',

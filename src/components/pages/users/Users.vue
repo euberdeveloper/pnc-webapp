@@ -1,5 +1,5 @@
 <template>
-  <pnc-base-resource-manager
+  <pnc-base-table-page
     title="Users"
     tableTitle="Users"
     :tableSelectedValues.sync="selectedValues"
@@ -37,7 +37,7 @@
         class="mt-6"
       />
     </template> -->
-  </pnc-base-resource-manager>
+  </pnc-base-table-page>
 </template>
 
 <script lang="ts">
@@ -48,12 +48,12 @@ import { AlertType } from "@/store";
 import ResourceManagerMixin from "@/mixins/ResourceManagerMixin";
 import UserHandlerMixin from "@/mixins/handlers/UserHandlerMixin";
 
-import PncBaseResourceManager, { Column, Actions } from "@/components/gears/bases/PncBaseResourceManager.vue";
+import PncBaseTablePage, { Column, Actions } from "@/components/gears/bases/PncBaseTablePage.vue";
 import PncUserCreateForm from "@/components/gears/forms/PncUserCreateForm.vue";
 
 @Component({
   components: {
-    PncBaseResourceManager,
+    PncBaseTablePage,
     PncUserCreateForm
   },
 })

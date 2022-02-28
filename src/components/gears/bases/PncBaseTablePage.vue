@@ -1,10 +1,6 @@
 <template>
-  <v-card>
-    <v-card-title class="headline primary white--text" v-if="isCard">
-      <v-icon v-if="hasBackButton" class="back-icon" @click="goBack()">mdi-arrow-left-thick</v-icon>
-      {{ title }}
-    </v-card-title>
-    <v-card-text>
+  <pnc-base-page :title="title">
+    <template v-slot:description>
       <slot name="description">
         <v-subheader class="px-0 mt-md-4 mb-md-0 mt-8 mb-4 text-subtitle-1" v-if="description">
           <!-- description -->
@@ -35,85 +31,88 @@
           </v-btn>
         </v-subheader>
       </slot>
-    </v-card-text>
+    </template>
+    <template v-slot>
+      <!-- TABLE -->
+      <pnc-base-table
+        :title="tableTitle"
+        v-model="internalTableSelectedValues"
+        :columns="tableColumns"
+        :actions="tableActions"
+        :rowBackgrounds="rowBackgrounds"
+        :groupHeaders="tableGroupHeaders"
+        :values="tableValues"
+        :itemKey="tableItemKey"
+        :sortBy="tableSortBy"
+        :sortDesc="tableSortDesc"
+        :showSelect="tableShowSelect"
+        :multiSort="tableMultiSort"
+        :loading="tableLoading"
+        :showTitle="tableShowTitle"
+        :updateBody.sync="internalTableUpdateBody"
+        :options.sync="internalTableOptions"
+        :itemsPerPageOptions="tableItemsPerPageOptions"
+        :serverItemsLength="tableServerItemsLength"
+        :tableSearch.sync="internalTableSearch"
+        @click:row="tableRowClicked"
+        v-if="showTable"
+      >
+        <template v-slot:header>
+          <slot name="tableHeader" />
+        </template>
+      </pnc-base-table>
 
-    <!-- TABLE -->
-    <pnc-base-table
-      :title="tableTitle"
-      v-model="internalTableSelectedValues"
-      :columns="tableColumns"
-      :actions="tableActions"
-      :rowBackgrounds="rowBackgrounds"
-      :groupHeaders="tableGroupHeaders"
-      :values="tableValues"
-      :itemKey="tableItemKey"
-      :sortBy="tableSortBy"
-      :sortDesc="tableSortDesc"
-      :showSelect="tableShowSelect"
-      :multiSort="tableMultiSort"
-      :loading="tableLoading"
-      :showTitle="tableShowTitle"
-      :updateBody.sync="internalTableUpdateBody"
-      :options.sync="internalTableOptions"
-      :itemsPerPageOptions="tableItemsPerPageOptions"
-      :serverItemsLength="tableServerItemsLength"
-      :tableSearch.sync="internalTableSearch"
-      @click:row="tableRowClicked"
-      v-if="showTable"
-    >
-      <template v-slot:header>
-        <slot name="tableHeader" />
-      </template>
-    </pnc-base-table>
-
-    <!-- PLUS FAB BUTTON -->
-    <v-fab-transition v-if="showActionButton && !isSelecting" key="plus">
-      <v-btn color="primary" @click="fabCreateClick" fab large fixed bottom right>
-        <v-icon>mdi-plus</v-icon>
-      </v-btn>
-    </v-fab-transition>
-    <!-- DELETE/SELECT FAB BUTTON -->
-    <v-fab-transition v-else-if="showActionButton" key="delete">
-      <slot name="selectFab">
-        <v-btn color="error" @click="fabDeleteClick" fab large fixed bottom right>
-          <v-icon>mdi-delete</v-icon>
+      <!-- PLUS FAB BUTTON -->
+      <v-fab-transition v-if="showActionButton && !isSelecting" key="plus">
+        <v-btn color="primary" @click="fabCreateClick" fab large fixed bottom right>
+          <v-icon>mdi-plus</v-icon>
         </v-btn>
-      </slot>
-    </v-fab-transition>
+      </v-fab-transition>
+      <!-- DELETE/SELECT FAB BUTTON -->
+      <v-fab-transition v-else-if="showActionButton" key="delete">
+        <slot name="selectFab">
+          <v-btn color="error" @click="fabDeleteClick" fab large fixed bottom right>
+            <v-icon>mdi-delete</v-icon>
+          </v-btn>
+        </slot>
+      </v-fab-transition>
 
-    <!-- CREATE DIALOG -->
-    <pnc-action-dialog
-      :title="createDialogTitle"
-      :width="dialogWidth"
-      :widthMobile="dialogWidthMobile"
-      v-model="internalCreateDialogShow"
-      :disabled="createDialogDisabled"
-      @cancel="createDialogCancel"
-      @confirm="createDialogConfirm"
-    >
-      <slot name="createDialog" />
-    </pnc-action-dialog>
+      <!-- CREATE DIALOG -->
+      <pnc-action-dialog
+        :title="createDialogTitle"
+        :width="dialogWidth"
+        :widthMobile="dialogWidthMobile"
+        v-model="internalCreateDialogShow"
+        :disabled="createDialogDisabled"
+        @cancel="createDialogCancel"
+        @confirm="createDialogConfirm"
+      >
+        <slot name="createDialog" />
+      </pnc-action-dialog>
 
-    <!-- EDIT DIALOG -->
-    <pnc-action-dialog
-      :title="editDialogTitle"
-      :width="dialogWidth"
-      :widthMobile="dialogWidthMobile"
-      v-model="internalEditDialogShow"
-      :disabled="editDialogDisabled"
-      @cancel="editDialogCancel"
-      @confirm="editDialogConfirm"
-    >
-      <slot name="editDialog" />
-    </pnc-action-dialog>
-  </v-card>
+      <!-- EDIT DIALOG -->
+      <pnc-action-dialog
+        :title="editDialogTitle"
+        :width="dialogWidth"
+        :widthMobile="dialogWidthMobile"
+        v-model="internalEditDialogShow"
+        :disabled="editDialogDisabled"
+        @cancel="editDialogCancel"
+        @confirm="editDialogConfirm"
+      >
+        <slot name="editDialog" />
+      </pnc-action-dialog>
+    </template>
+  </pnc-base-page>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
+import { Location } from "vue-router";
 import { DataOptions } from "vuetify";
 
 import PncActionDialog from "@/components/gears/dialogs/PncActionDialog.vue";
+import PncBasePage from "@/components/gears/bases/PncBasePage.vue";
 import PncBaseTable, { Actions, Column, GroupHeaders, RowColors } from "@/components/gears/bases/PncBaseTable.vue";
 
 export { Actions, Column, GroupHeaders } from "@/components/gears/bases/PncBaseTable.vue";
@@ -121,17 +120,15 @@ export { Actions, Column, GroupHeaders } from "@/components/gears/bases/PncBaseT
 @Component({
   components: {
     PncActionDialog,
+    PncBasePage,
     PncBaseTable,
   },
 })
-export default class PncBaseResourceManager extends Vue {
+export default class PncBaseTablePage extends Vue {
   /* PROPS */
 
-  @Prop({ type: Boolean, default: false })
-  hasBackButton!: boolean;
-
-  @Prop({ type: Boolean, default: true })
-  isCard!: boolean;
+  @Prop({ type: [String, Object], required: false })
+  backRoute?: string | Location;
 
   @Prop({ type: String, required: true })
   title!: string;
@@ -307,10 +304,6 @@ export default class PncBaseResourceManager extends Vue {
 
   tableRowClicked(item: any): void {
     this.$emit("tableRowClicked", item);
-  }
-
-  goBack() {
-    this.$router.go(-1);
   }
 }
 </script>
