@@ -31,7 +31,6 @@ export default class PncMessagesQueue extends Vue {
   /* GETTERS AND SETTERS */
 
   get intenalMessages(): QueueMessage[] {
-    console.log(this.messages)
     return this.messages;
   }
   set intenalMessages(value: QueueMessage[]) {
