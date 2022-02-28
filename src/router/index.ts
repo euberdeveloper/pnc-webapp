@@ -4,18 +4,17 @@ import { UserRole } from 'pnc-sdk';
 
 import rootRedirect from './utils/rootRedirect';
 import beforeEach from './utils/beforeEach';
-import { bindQuery } from './utils/bindQuery';
 
 /* PUBLIC */
 const NotFound = () => import(/* webpackChunkName: "public" */ '@/views/not-found/NotFoundView.vue');
-const Login = () => import(/* webpackChunkName: "public" */ '@/views/login/LoginView.vue');
+// const Login = () => import(/* webpackChunkName: "public" */ '@/views/login/LoginView.vue');
 
-/* DASHBOARD */
-const Dashboard = () => import(/* webpackChunkName: "dashboard" */ '@/views/dashboard/Dashboard.vue');
-const DashboardBar = () => import(/* webpackChunkName: "dashboard" */ '@/views/dashboard/DashboardBar.vue');
-const DashboardMenu = () => import(/* webpackChunkName: "dashboard" */ '@/views/dashboard/DashboardMenuView.vue');
-const DashboardUsers = () => import(/* webpackChunkName: "dashboard" */ '@/views/dashboard/users/DashboardUsersView.vue');
-const DashboardNotFound = () => import(/* webpackChunkName: "dashboard" */ '@/views/dashboard/not-found/DashboardNotFoundView.vue');
+// /* DASHBOARD */
+// const Dashboard = () => import(/* webpackChunkName: "dashboard" */ '@/views/dashboard/Dashboard.vue');
+// const DashboardBar = () => import(/* webpackChunkName: "dashboard" */ '@/views/dashboard/DashboardBar.vue');
+// const DashboardMenu = () => import(/* webpackChunkName: "dashboard" */ '@/views/dashboard/DashboardMenuView.vue');
+// const DashboardUsers = () => import(/* webpackChunkName: "dashboard" */ '@/views/dashboard/users/DashboardUsersView.vue');
+// const DashboardNotFound = () => import(/* webpackChunkName: "dashboard" */ '@/views/dashboard/not-found/DashboardNotFoundView.vue');
 
 Vue.use(VueRouter);
 
@@ -25,37 +24,37 @@ const routes: Array<RouteConfig> = [
     name: 'root',
     redirect: rootRedirect(true)
   },
-  {
-    path: '/login',
-    name: 'login',
-    component: Login
-  },
-  {
-    path: '/dashboard',
-    components: {
-      default: Dashboard,
-      bar: DashboardBar,
-      menu: DashboardMenu
-    },
-    meta: { authentication: true },
-    children: [
-      {
-        path: '',
-        redirect: rootRedirect(false)
-      },
-      {
-        path: 'users',
-        name: 'dashboard-users',
-        meta: { authorizedRoles: [UserRole.ADMIN] },
-        component: DashboardUsers
-      },
-      {
-        path: '*',
-        name: 'dashboard-not-found',
-        component: DashboardNotFound
-      }
-    ]
-  },
+  // {
+  //   path: '/login',
+  //   name: 'login',
+  //   component: Login
+  // },
+  // {
+  //   path: '/dashboard',
+  //   components: {
+  //     default: Dashboard,
+  //     bar: DashboardBar,
+  //     menu: DashboardMenu
+  //   },
+  //   meta: { authentication: true },
+  //   children: [
+  //     {
+  //       path: '',
+  //       redirect: rootRedirect(false)
+  //     },
+  //     {
+  //       path: 'users',
+  //       name: 'dashboard-users',
+  //       meta: { authorizedRoles: [UserRole.ADMIN] },
+  //       component: DashboardUsers
+  //     },
+  //     {
+  //       path: '*',
+  //       name: 'dashboard-not-found',
+  //       component: DashboardNotFound
+  //     }
+  //   ]
+  // },
   {
     path: '*',
     name: 'not-found',
