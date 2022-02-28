@@ -13,7 +13,7 @@
       </template>
     </v-snackbar>
     <!-- DIALOG ALERT MESSAGE -->
-    <pnc-error-dialog v-model="showAlertDialog" :title="alertDialog.title" :text="alertDialog.text" :color="alertDialog.color" />
+    <pnc-error-dialog v-model="showAlertDialog" :title="alertDialogTitle" :text="alertDialogText" :color="alertDialogColor" />
     <!-- MESSAGES QUEUE -->
     <pnc-errors-queue v-model="messagesQueue" />
     <!-- DIALOG CONFIRM -->
@@ -50,6 +50,15 @@ export default class App extends Vue {
   get alertDialog(): AlertDialogMessage | null {
     return this.$store.state.alertDialog;
   }
+  get alertDialogTitle(): string | undefined {
+    return this.alertDialog?.title;
+  }
+  get alertDialogText(): string | undefined {
+    return this.alertDialog?.text;
+  }
+  get alertDialogColor(): string | undefined {
+    return this.alertDialog?.color;
+  }
   get confirmDialog() {
     return this.$store.state.confirmDialog;
   }
@@ -71,8 +80,6 @@ export default class App extends Vue {
       this.$store.dispatch(ActionTypes.HIDE_CONFIRM_DIALOG);
     }
   }
-
- 
 
   get messagesQueue(): QueueMessage[] {
     return this.$store.state.messagesQueue;
