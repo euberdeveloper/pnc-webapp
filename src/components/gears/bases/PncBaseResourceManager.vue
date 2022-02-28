@@ -17,7 +17,7 @@
             <v-icon left dark>mdi-file-table</v-icon>
             <span>TSV</span>
             <template v-slot:loader>
-              <span class="operatn-loader">
+              <span class="pnc-loader">
                 <v-icon light>mdi-cached</v-icon>
               </span>
             </template>
@@ -28,7 +28,7 @@
             <v-icon left dark>mdi-google-spreadsheet</v-icon>
             <span>XLSX</span>
             <template v-slot:loader>
-              <span class="operatn-loader">
+              <span class="pnc-loader">
                 <v-icon light>mdi-cached</v-icon>
               </span>
             </template>
@@ -38,7 +38,7 @@
     </v-card-text>
 
     <!-- TABLE -->
-    <operatn-base-table
+    <pnc-base-table
       :title="tableTitle"
       v-model="internalTableSelectedValues"
       :columns="tableColumns"
@@ -64,7 +64,7 @@
       <template v-slot:header>
         <slot name="tableHeader" />
       </template>
-    </operatn-base-table>
+    </pnc-base-table>
 
     <!-- PLUS FAB BUTTON -->
     <v-fab-transition v-if="showActionButton && !isSelecting" key="plus">
@@ -82,7 +82,7 @@
     </v-fab-transition>
 
     <!-- CREATE DIALOG -->
-    <operatn-action-dialog
+    <pnc-action-dialog
       :title="createDialogTitle"
       :width="dialogWidth"
       :widthMobile="dialogWidthMobile"
@@ -92,10 +92,10 @@
       @confirm="createDialogConfirm"
     >
       <slot name="createDialog" />
-    </operatn-action-dialog>
+    </pnc-action-dialog>
 
     <!-- EDIT DIALOG -->
-    <operatn-action-dialog
+    <pnc-action-dialog
       :title="editDialogTitle"
       :width="dialogWidth"
       :widthMobile="dialogWidthMobile"
@@ -105,7 +105,7 @@
       @confirm="editDialogConfirm"
     >
       <slot name="editDialog" />
-    </operatn-action-dialog>
+    </pnc-action-dialog>
   </v-card>
 </template>
 

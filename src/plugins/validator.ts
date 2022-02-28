@@ -34,6 +34,9 @@ const validator = {
             if (!/[@$!%*?&]/.test(value)) {
                 return 'At least on special character among @$!%*?&';
             }
+            if (!/^[A-Za-z\d@$!%*?&]*$/.test(value)) {
+                return 'Some unallowed characters have been used';
+            }
             return true;
         }
     },

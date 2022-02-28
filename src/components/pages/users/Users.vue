@@ -1,7 +1,6 @@
 <template>
   <pnc-base-resource-manager
     title="Users"
-    description="Users of Preben Norwegian Community"
     tableTitle="Users"
     :tableSelectedValues.sync="selectedValues"
     :tableColumns="columns"
@@ -26,10 +25,10 @@
     @editDialogCancel="closeEdit(false)"
   >
     <template v-slot:createDialog>
-      <pnc-utente-create-form v-if="showCreateDialog" v-model="createBody" :formValid.sync="createBodyValid" :usersUsernames="usersUsernames" class="mt-6" />
+      <pnc-user-create-form v-if="showCreateDialog" v-model="createBody" :formValid.sync="createBodyValid" :usersUsernames="usersUsernames" class="mt-6" />
     </template>
-    <template v-slot:editDialog>
-      <pnc-utente-edit-form
+    <!-- <template v-slot:editDialog>
+      <pnc-user-edit-form
         v-if="showEditDialog"
         v-model="updateBody"
         :formValid.sync="updateBodyValid"
@@ -37,12 +36,12 @@
         :canChangePassword="isRoot"
         class="mt-6"
       />
-    </template>
+    </template> -->
   </pnc-base-resource-manager>
 </template>
 
 <script lang="ts">
-import { Component, Mixins, Prop } from "vue-property-decorator";
+import { Component, Mixins } from "vue-property-decorator";
 import { User, UserRole, UsersCreateBody } from "pnc-sdk";
 
 import { AlertType } from "@/store";
@@ -52,24 +51,17 @@ import UserHandlerMixin from "@/mixins/handlers/UserHandlerMixin";
 
 import PncBaseResourceManager, { Column, Actions } from "@/components/gears/bases/PncBaseResourceManager.vue";
 import PncUserCreateForm from "@/components/gears/forms/PncUserCreateForm.vue";
-import PncUserEditForm from "@/components/gears/forms/PncUserEditForm.vue";
 
 @Component({
   components: {
     PncBaseResourceManager,
-    PncUserCreateForm,
-    PncUserEditForm,
+    PncUserCreateForm
   },
 })
 export default class Users extends Mixins<ResourceManagerMixin<User, UsersCreateBody, any, string> & UserHandlerMixin>(
   ResourceManagerMixin,
   UserHandlerMixin
 ) {
-  /* PROPS */
-
-  @Prop({ type: Boolean, required: true })
-  isRoot!: boolean;
-
   /* DATA */
 
   protected askDeleteText = "Are you sure that you want to delete this user?";
@@ -84,20 +76,20 @@ export default class Users extends Mixins<ResourceManagerMixin<User, UsersCreate
         value: "username",
         groupable: false,
 
-        editable: true,
-        onEditCancel: () => this.sprepareUpdateBody(),
-        onEditClose: () => {},
-        onEditSave: () => this.updateValue(),
-        onEditOpen: (item) => {
-          this.prepareUpdateBody(item);
-        },
-        editInput: {
-          type: "text",
-          label: "Edit",
-          hint: "Press enter to save",
-          counter: true,
-          rules: [this.$validator.requiredText("User"), this.$validator.unique(this.usersUsernames)],
-        },
+        // editable: true,
+        // onEditCancel: () => this.sprepareUpdateBody(),
+        // onEditClose: () => {},
+        // onEditSave: () => this.updateValue(),
+        // onEditOpen: (item) => {
+        //   this.prepareUpdateBody(item);
+        // },
+        // editInput: {
+        //   type: "text",
+        //   label: "Edit",
+        //   hint: "Press enter to save",
+        //   counter: true,
+        //   rules: [this.$validator.requiredText("User"), this.$validator.unique(this.usersUsernames)],
+        // },
       },
 
       {
@@ -105,20 +97,20 @@ export default class Users extends Mixins<ResourceManagerMixin<User, UsersCreate
         value: "email",
         groupable: false,
 
-        editable: true,
-        onEditCancel: () => this.sprepareUpdateBody(),
-        onEditClose: () => {},
-        onEditSave: () => this.updateValue(),
-        onEditOpen: (item) => {
-          this.prepareUpdateBody(item);
-        },
-        editInput: {
-          type: "email",
-          label: "Edit",
-          hint: "Click enter to save",
-          counter: true,
-          rules: [this.$validator.requiredText("Email"), this.$validator.email()],
-        },
+        // editable: true,
+        // onEditCancel: () => this.sprepareUpdateBody(),
+        // onEditClose: () => {},
+        // onEditSave: () => this.updateValue(),
+        // onEditOpen: (item) => {
+        //   this.prepareUpdateBody(item);
+        // },
+        // editInput: {
+        //   type: "email",
+        //   label: "Edit",
+        //   hint: "Click enter to save",
+        //   counter: true,
+        //   rules: [this.$validator.requiredText("Email"), this.$validator.email()],
+        // },
       },
       {
         text: "Role",
@@ -126,23 +118,23 @@ export default class Users extends Mixins<ResourceManagerMixin<User, UsersCreate
         groupable: true,
         filterable: false,
 
-        editable: true,
-        onEditCancel: () => this.sprepareUpdateBody(),
-        onEditClose: () => {},
-        onEditSave: () => this.updateValue(),
-        onEditOpen: (item) => {
-          this.prepareUpdateBody(item);
-        },
-        editInput: {
-          type: "select",
-          label: "Edit",
-          hint: "Click enter to save",
-          rules: [this.$validator.requiredText("Role"), this.$validator.userRole()],
-          items: this.$store.state.roles,
-        },
-        itemText: true,
-        itemIcon: true,
-        itemIconHandler: (value: UserRole | null) => getRoleIcon(value) ?? "",
+        // editable: true,
+        // onEditCancel: () => this.sprepareUpdateBody(),
+        // onEditClose: () => {},
+        // onEditSave: () => this.updateValue(),
+        // onEditOpen: (item) => {
+        //   this.prepareUpdateBody(item);
+        // },
+        // editInput: {
+        //   type: "select",
+        //   label: "Edit",
+        //   hint: "Click enter to save",
+        //   rules: [this.$validator.requiredText("Role"), this.$validator.userRole()],
+        //   items: this.$store.state.roles,
+        // },
+        // itemText: true,
+        // itemIcon: true,
+        // itemIconHandler: (value: UserRole | null) => getRoleIcon(value) ?? "",
       },
       {
         text: "Creation date",
@@ -162,7 +154,7 @@ export default class Users extends Mixins<ResourceManagerMixin<User, UsersCreate
 
   get actions(): Actions<User> {
     return {
-      onEdit: (item) => this.openEdit(item),
+      // onEdit: (item) => this.openEdit(item),
       onDelete: (item) => this.askDelete(item),
     };
   }
