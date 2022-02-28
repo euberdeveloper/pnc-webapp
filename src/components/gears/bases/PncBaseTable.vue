@@ -23,7 +23,7 @@
         <v-container class="pa-0 fill-height fluid d-flex" fluid>
           <v-toolbar-title class="mr-4" v-if="showTitle && $vuetify.breakpoint.mdAndUp">{{ title }}</v-toolbar-title>
           <slot name="header">
-            <v-text-field class="flex" v-model="internalSearch" label="Cerca" dense solo outlined clearable hide-details prepend-inner-icon="mdi-magnify" />
+            <v-text-field class="flex" v-model="internalSearch" label="Search" dense solo outlined clearable hide-details prepend-inner-icon="mdi-magnify" />
           </slot>
         </v-container>
       </v-toolbar>
