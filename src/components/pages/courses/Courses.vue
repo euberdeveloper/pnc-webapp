@@ -2,7 +2,7 @@
   <pnc-base-page title="Courses">
     <v-container fluid>
       <v-row align="start" justify="start">
-        <v-col v-for="course of courses" :key="course.id" cols="4">
+        <v-col v-for="course of courses" :key="course.id" cols="12" sm="4">
           <course-card :course="course" />
         </v-col>
       </v-row>
