@@ -16,11 +16,11 @@
     </v-list>
     <v-divider />
     <p class="version">
-      <span>Version web-app:</span>
+      <span>Site version:</span>
       <span class="version-value"> {{ siteVersion }}</span>
     </p>
     <p class="version">
-      <span>Version APIs:</span>
+      <span>API version:</span>
       <span class="version-value"> {{ apiVersion }}</span>
     </p>
   </v-navigation-drawer>
