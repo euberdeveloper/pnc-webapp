@@ -22,7 +22,6 @@ export default class DashboardView extends Vue {
   get elevated(): boolean {
     return !this.$route.meta?.noElevation;
   }
- 
 }
 </script>
 
