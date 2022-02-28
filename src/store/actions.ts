@@ -80,10 +80,7 @@ export const actions: ActionTree<State, State> & Actions = {
                 dispatch(ActionTypes.SHOW_ALERT_ERROR, message);
                 break;
             case AlertType.ERRORS_QUEUE:
-                dispatch(ActionTypes.ADD_MESSAGE_TO_QUEUE, {
-                    text: message,
-                    color: 'red'
-                });
+                dispatch(ActionTypes.ADD_ERROR_TO_QUEUE, message);
                 break;
             default:
                 break;
