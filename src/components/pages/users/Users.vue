@@ -42,10 +42,9 @@
 
 <script lang="ts">
 import { Component, Mixins } from "vue-property-decorator";
-import { User, UserRole, UsersCreateBody } from "pnc-sdk";
+import { User, UsersCreateBody } from "pnc-sdk";
 
 import { AlertType } from "@/store";
-import { getRoleIcon } from "@/utils";
 import ResourceManagerMixin from "@/mixins/ResourceManagerMixin";
 import UserHandlerMixin from "@/mixins/handlers/UserHandlerMixin";
 
@@ -134,7 +133,7 @@ export default class Users extends Mixins<ResourceManagerMixin<User, UsersCreate
         // },
         // itemText: true,
         // itemIcon: true,
-        // itemIconHandler: (value: UserRole | null) => getRoleIcon(value) ?? "",
+        // itemIconHandler: (value: UserRole | null) => (value) ?? "",
       },
       {
         text: "Creation date",

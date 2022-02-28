@@ -82,6 +82,8 @@ export default class App extends Vue {
   }
 
   get messagesQueue(): QueueMessage[] {
+    console.log('mqueue')
+    console.log(this.$store.state.messagesQueue);
     return this.$store.state.messagesQueue;
   }
   set messagesQueue(value: QueueMessage[]) {

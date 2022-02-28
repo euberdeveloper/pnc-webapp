@@ -90,7 +90,7 @@ export const actions: ActionTree<State, State> & Actions = {
         commit(MutationTypes.ADD_MESSAGE_TO_QUEUE, message);
     },
     [ActionTypes.ADD_ERROR_TO_QUEUE]({ dispatch }, text) {
-        dispatch(ActionTypes.ADD_MESSAGE_TO_QUEUE, { text, color: 'red' });
+        dispatch(ActionTypes.ADD_MESSAGE_TO_QUEUE, { message: text, color: 'red' });
     },
     [ActionTypes.SET_MESSAGE_QUEUE]({ commit }, queue) {
         commit(MutationTypes.SET_MESSAGE_QUEUE, queue);

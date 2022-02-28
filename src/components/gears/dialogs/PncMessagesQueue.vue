@@ -1,5 +1,5 @@
 <template>
-  <v-snackbars :messages.sync="intenalMessages" color="red" top right>
+  <v-snackbars :objects.sync="intenalMessages" color="red" top right>
     <template v-slot:action="{ close }">
       <v-btn text @click="close()">CLOSE</v-btn>
     </template>
@@ -31,6 +31,7 @@ export default class PncMessagesQueue extends Vue {
   /* GETTERS AND SETTERS */
 
   get intenalMessages(): QueueMessage[] {
+    console.log(this.messages)
     return this.messages;
   }
   set intenalMessages(value: QueueMessage[]) {

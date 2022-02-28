@@ -12,7 +12,7 @@ export interface AlertDialogMessage {
 }
 
 export interface QueueMessage {
-    text: string
+    message: string
     color: string
 }
 
