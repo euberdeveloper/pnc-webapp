@@ -2,7 +2,7 @@ import Vue from 'vue'
 import App from '@/App.vue'
 import './registerServiceWorker'
 import router from '@/router'
-import store/*, { ActionTypes } */from '@/store'
+import store, { ActionTypes } from '@/store'
 import VueGtag from "vue-gtag";
 import vuetify from '@/plugins/vuetify';
 import api from '@/plugins/api';
@@ -17,10 +17,10 @@ async function main() {
     }, router);
   }
 
-  // await store.dispatch(ActionTypes.STARTUP);
-  // api.errorHandler = (error) => {
-  //   store.dispatch(ActionTypes.HANDLE_API_ERROR, error);
-  // };
+  await store.dispatch(ActionTypes.STARTUP);
+  api.errorHandler = (error) => {
+    store.dispatch(ActionTypes.HANDLE_API_ERROR, error);
+  };
 
   new Vue({
     router,
