@@ -62,6 +62,6 @@ export default class NoFound extends Vue {
   width: 100vw;
   height: 100vh;
 
-  filter: blur(5px);
+  filter: blur(0px);
 }
 </style>
