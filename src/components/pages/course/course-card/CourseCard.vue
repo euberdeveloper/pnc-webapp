@@ -4,7 +4,7 @@
     <v-card-title> {{ course.title }} </v-card-title>
 
     <v-card-actions>
-      <v-btn color="orange lighten-2" :to="courseLink" text>View</v-btn>
+      <v-btn color="orange lighten-2" text>View</v-btn>
       <v-spacer />
       <v-btn icon @click="show = !show" v-if="course.description">
         <v-icon>{{ show ? "mdi-chevron-up" : "mdi-chevron-down" }}</v-icon>
@@ -26,7 +26,6 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import { Location } from "vue-router";
 import { Course } from "pnc-sdk";
 
 @Component
@@ -44,10 +43,6 @@ export default class Courses extends Vue {
 
   get courseImage(): string {
     return this.course.courseImage ?? require("@/assets/placeholder.png");
-  }
-
-  get courseLink(): Location {
-    return { name: "dashboard-courses-id", params: { courseId: this.course.id } };
   }
 }
 </script>

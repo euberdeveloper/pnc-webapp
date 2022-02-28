@@ -15,6 +15,7 @@ const DashboardBar = () => import(/* webpackChunkName: "dashboard" */ '@/views/d
 const DashboardMenu = () => import(/* webpackChunkName: "dashboard" */ '@/views/dashboard/DashboardMenuView.vue');
 const DashboardUsers = () => import(/* webpackChunkName: "dashboard" */ '@/views/dashboard/users/DashboardUsersView.vue');
 const DashboardCourses = () => import(/* webpackChunkName: "dashboard" */ '@/views/dashboard/courses/DashboardCoursesView.vue');
+const DashboardCoursesId = () => import(/* webpackChunkName: "dashboard" */ '@/views/dashboard/courses/id/DashboardCoursesIdView.vue');
 const DashboardNotFound = () => import(/* webpackChunkName: "dashboard" */ '@/views/dashboard/not-found/DashboardNotFoundView.vue');
 
 Vue.use(VueRouter);
@@ -53,6 +54,12 @@ const routes: Array<RouteConfig> = [
         path: 'courses',
         name: 'dashboard-courses',
         component: DashboardCourses
+      },
+      {
+        path: 'courses/:courseId',
+        name: 'dashboard-courses-id',
+        props: true,
+        component: DashboardCoursesId
       },
       {
         path: '*',
