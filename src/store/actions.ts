@@ -2,6 +2,7 @@ import { ActionTree, ActionContext } from 'vuex'
 import { ApiError, ClientError, InvalidCredentialsError, RequestError, UnknownApiError, User } from 'pnc-sdk';
 import router from '@/router';
 import api from '@/plugins/api';
+import { localStorage } from '@/utils';
 
 import { AlertDialogMessage, QueueMessage, State, Toast } from './state'
 import { Mutations, MutationTypes } from './mutations'

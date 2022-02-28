@@ -1,12 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import { UserRole } from "pnc-sdk";
-
-const background_0 = () => require('@/assets/norway_backgrounds/0.jpg');
-const background_1 = () => require('@/assets/norway_backgrounds/1.jpg');
-const background_2 = () => require('@/assets/norway_backgrounds/2.jpg');
-const background_3 = () => require('@/assets/norway_backgrounds/3.jpg');
-const background_4 = () => require('@/assets/norway_backgrounds/4.jpg');
-const background_5 = () => require('@/assets/norway_backgrounds/5.jpg');
+import CONFIG from '@/config';
 
 export function getRoleIcon(role?: UserRole | null): string | null {
     switch (role) {
@@ -20,12 +14,27 @@ export function getRoleIcon(role?: UserRole | null): string | null {
 
 export function getRandomNorwayBackground() {
     const norwayBackgrounds = [
-        background_0,
-        background_1,
-        background_2,
-        background_3,
-        background_4,
-        background_5
+        require('@/assets/norway_backgrounds/0.jpg'),
+        require('@/assets/norway_backgrounds/1.jpg'),
+        require('@/assets/norway_backgrounds/2.jpg'),
+        require('@/assets/norway_backgrounds/3.jpg'),
+        require('@/assets/norway_backgrounds/4.jpg'),
+        require('@/assets/norway_backgrounds/5.jpg'),
     ];
-    return norwayBackgrounds[Math.floor(Math.random() * norwayBackgrounds.length)]();
+    return norwayBackgrounds[Math.floor(Math.random() * norwayBackgrounds.length)];
 }
+
+export const localStorage = {
+    getItem(key: string): string | null {
+        const handledKey = `${CONFIG.STORAGE_PREFIX}${key}`;
+        return window.localStorage.getItem(handledKey);
+    },
+    setItem(key: string, value: string): void {
+        const handledKey = `${CONFIG.STORAGE_PREFIX}${key}`;
+        window.localStorage.setItem(handledKey, value);
+    },
+    removeItem(key: string): void {
+        const handledKey = `${CONFIG.STORAGE_PREFIX}${key}`;
+        window.localStorage.removeItem(handledKey);
+    }
+} 
