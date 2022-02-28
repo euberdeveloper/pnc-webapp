@@ -5,7 +5,7 @@ import { BadRequestError, InvalidBodyError, InvalidPathParamError, NotFoundError
 import { ActionTypes, AlertType } from "@/store";
 
 @Component
-export default class UtenteHandlerMixin extends Vue {
+export default class UserHandlerMixin extends Vue {
 
   /* METHODS */
 

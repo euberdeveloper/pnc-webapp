@@ -1,18 +1,39 @@
 <template>
   <pnc-base-page title="Courses">
-    ciao
+    <v-container fluid>
+      <v-row align="start" justify="start">
+        <v-col v-for="course of courses" :key="course.id" cols="4">
+          <course-card :course="course" />
+        </v-col>
+      </v-row>
+    </v-container>
   </pnc-base-page>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Mixins } from "vue-property-decorator";
+import { Course } from "pnc-sdk";
+
+import CourseHandlerMixin from "@/mixins/handlers/CourseHandlerMixin";
 
 import PncBasePage from "@/components/gears/bases/PncBasePage.vue";
+import CourseCard from "./course-card/CourseCard.vue";
 
 @Component({
   components: {
     PncBasePage,
+    CourseCard,
   },
 })
-export default class Users extends Vue {}
+export default class Courses extends Mixins(CourseHandlerMixin) {
+  /* DATA */
+
+  private courses: Course[] = [];
+
+  /* LIFE CYCLE */
+
+  async created() {
+    this.courses = await this.getCourses();
+  }
+}
 </script>
