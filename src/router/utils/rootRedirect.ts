@@ -4,7 +4,7 @@ import { UserRole } from 'pnc-sdk';
 export default function (isRoot: boolean): () => string {
   return () => {
     const role: UserRole | undefined = store.state.user?.role;
-    const prefix = isRoot ? '/' : '';
+    const prefix = isRoot ? '/dashboard/' : '';
 
     switch (role) {
       case UserRole.ADMIN:
@@ -14,7 +14,7 @@ export default function (isRoot: boolean): () => string {
       case UserRole.STUDENT:
         return `${prefix}courses`;
       default:
-        return `${prefix}login`;
+        return `/login`;
     }
   }
 }

@@ -1,6 +1,6 @@
 import { NavigationGuard } from 'vue-router';
 import { UserRole } from 'pnc-sdk';
-import store, { ActionTypes } from '@/store';
+import store from '@/store';
 
 const beforeEach: NavigationGuard = function (to, _from, next) {
     const role: UserRole | null = store.getters.role;
@@ -15,11 +15,11 @@ const beforeEach: NavigationGuard = function (to, _from, next) {
     else if (role !== null && (!authorizedRoles.length || authorizedRoles.includes(role))) {
         next();
     }
-    else {
-        if (role !== null) {
-            store.dispatch(ActionTypes.SHOW_ALERT_ERROR, `The user has no permissions to access this page, try to remove everything after '?' in the URL bar`);
-        }
+    else if (role === null) {
         next({ name: 'login', query: { requestedRoute: to.path } });
+    }
+    else {
+        next({ name: 'not-found' });
     }
 }
 

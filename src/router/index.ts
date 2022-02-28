@@ -9,7 +9,7 @@ import beforeEach from './utils/beforeEach';
 const NotFound = () => import(/* webpackChunkName: "public" */ '@/views/not-found/NotFoundView.vue');
 const Login = () => import(/* webpackChunkName: "public" */ '@/views/login/LoginView.vue');
 
-// /* DASHBOARD */
+/* DASHBOARD */
 const Dashboard = () => import(/* webpackChunkName: "dashboard" */ '@/views/dashboard/DashboardView.vue');
 const DashboardBar = () => import(/* webpackChunkName: "dashboard" */ '@/views/dashboard/DashboardBarView.vue');
 const DashboardMenu = () => import(/* webpackChunkName: "dashboard" */ '@/views/dashboard/DashboardMenuView.vue');
