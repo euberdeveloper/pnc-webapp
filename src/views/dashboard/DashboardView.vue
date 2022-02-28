@@ -4,7 +4,7 @@
       <v-container fluid fill-height>
         <v-row align="center" justify="center">
           <v-col cols="12" sm="10">
-            <router-view class="elevation-8" />
+            <router-view :class="{ 'elevation-8': elevated }" />
           </v-col>
         </v-row>
       </v-container>
@@ -16,7 +16,14 @@
 import { Component, Vue } from "vue-property-decorator";
 
 @Component
-export default class DashboardView extends Vue {}
+export default class DashboardView extends Vue {
+  /* GETTERS */
+
+  get elevated(): boolean {
+    return !this.$route.meta?.noElevation;
+  }
+ 
+}
 </script>
 
 <style scoped>

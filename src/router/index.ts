@@ -51,6 +51,7 @@ const routes: Array<RouteConfig> = [
       {
         path: '*',
         name: 'dashboard-not-found',
+        meta: { noElevation: true },
         component: DashboardNotFound
       }
     ]
