@@ -1,7 +1,7 @@
 <template>
   <v-main>
     <!-- IMAGE OF BACKGROUND -->
-    <div class="background" :style="backgroundStyle" />
+    <pnc-norway-background />
 
     <!-- LOGIN CONTAINER -->
     <v-container class="fill-height" fluid>
@@ -62,13 +62,17 @@
 import { Component, Vue } from "vue-property-decorator";
 
 import { ActionTypes } from "@/store";
-import { getRandomNorwayBackground } from "@/utils";
 
-@Component
+import PncNorwayBackground from "@/components/gears/misc/PncNorwayBackground.vue";
+
+@Component({
+  components: {
+    PncNorwayBackground,
+  },
+})
 export default class Login extends Vue {
   /* DATA */
 
-  private backgroundImage: string | null = null;
   private showCard = false;
 
   private username: string | null = null;
@@ -79,13 +83,6 @@ export default class Login extends Vue {
   private loading = false;
 
   /* GETTERS AND SETTERS */
-
-  get backgroundStyle() {
-    return {
-      background: this.backgroundImage ? `url("${this.backgroundImage}") no-repeat center center fixed` : undefined,
-      "background-size": "cover",
-    };
-  }
 
   get passwordType(): "text" | "password" {
     return this.showPassword ? "text" : "password";
@@ -123,10 +120,6 @@ export default class Login extends Vue {
 
   /* LIFE CYCLE */
 
-  created() {
-    this.backgroundImage = getRandomNorwayBackground();
-  }
-
   mounted() {
     this.showCard = true;
   }
@@ -134,16 +127,6 @@ export default class Login extends Vue {
 </script>
 
 <style lang="scss" scoped>
-.background {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-
-  filter: blur(0px);
-}
-
 .help {
   position: absolute;
   bottom: 4px;
