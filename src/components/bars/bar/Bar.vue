@@ -1,7 +1,7 @@
 <template>
   <v-app-bar color="primary" clipped-left dark app>
     <!-- HAMBURGER BOTTON -->
-    <v-app-bar-nav-icon @click.stop="toggleMenu"></v-app-bar-nav-icon>
+    <v-app-bar-nav-icon @click.stop="toggleMenu" />
 
     <!-- TITLE -->
     <v-toolbar-title class="ml-0 pl-4">
@@ -48,7 +48,7 @@
                   </template>
                   <span>{{ $store.getters.role }}</span>
                 </v-tooltip>
-                <span>{{ $store.state.user.nomeUtente }}</span>
+                <span>{{ $store.state.user.username }}</span>
               </v-list-item-title>
               <v-list-item-subtitle>{{ $store.state.user.email }}</v-list-item-subtitle>
             </v-list-item-content>
