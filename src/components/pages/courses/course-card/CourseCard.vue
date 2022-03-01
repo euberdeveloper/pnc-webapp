@@ -30,7 +30,7 @@ import { Location } from "vue-router";
 import { Course } from "pnc-sdk";
 
 @Component
-export default class Courses extends Vue {
+export default class CourseCard extends Vue {
   /* PROPS */
 
   @Prop({ type: Object, required: true })

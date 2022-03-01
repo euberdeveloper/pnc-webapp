@@ -54,7 +54,7 @@ export default class UserHandlerMixin extends Vue {
   }
 
   getUsersUsernames(values: User[], backupValue: User | null): string[] {
-    const tipi = values.map((t) => t.username);
-    return backupValue ? tipi.filter((value) => value !== backupValue.username) : tipi;
+    const names = values.map((v) => v.username);
+    return backupValue ? names.filter((value) => value !== backupValue.username) : names;
   }
 }

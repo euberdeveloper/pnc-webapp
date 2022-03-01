@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <v-card-title class="headline primary white--text">
-      <v-icon v-if="backRoute" class="back-icon" @click="goBack()">mdi-arrow-left-thick</v-icon>
+      <v-icon v-if="backRoute" class="back-icon" color="white" @click="goBack()">mdi-arrow-left-thick</v-icon>
       {{ title }}
     </v-card-title>
     <v-card-text>
