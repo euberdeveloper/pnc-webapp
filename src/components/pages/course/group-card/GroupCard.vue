@@ -1,5 +1,5 @@
 <template>
-  <v-card class="group-card mx-auto" color="#26c6da" dark max-width="400">
+  <v-card class="group-card mx-auto" color="#26c6da" dark>
     <v-card-title>
       <span class="text-h6 font-weight-light d-flex" style="width: 100%">
         <router-link class="name" :to="groupRoute" >{{ group.name }}</router-link>
@@ -19,10 +19,10 @@
       </span>
 
       <v-row align="center" justify="end">
-        <v-btn class="blue--text text--darken-3" text icon @click="edit">
+        <v-btn class="blue--text text--darken-3" text icon @click="$emit('edit')">
           <v-icon>mdi-pencil</v-icon>
         </v-btn>
-        <v-btn color="red" class="mr-2" icon>
+        <v-btn color="red" class="mr-2" icon @click="$emit('remove')">
           <v-icon>mdi-delete</v-icon>
         </v-btn>
       </v-row>
@@ -51,12 +51,6 @@ export default class GroupCard extends Vue {
 
   get groupRoute(): Location {
     return { name: "dashboard-courses-id-groups-id", params: { courseId: this.group.courseId, groupId: this.group.id } };
-  }
-
-  /* METHODS */
-
-  async edit(): Promise<void> {
-
   }
 }
 </script>

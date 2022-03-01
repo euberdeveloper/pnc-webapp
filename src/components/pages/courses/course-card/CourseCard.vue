@@ -1,5 +1,5 @@
 <template>
-  <v-card class="mx-auto" max-width="344">
+  <v-card class="mx-auto" :max-width="$vuetify.breakpoint.xs ? undefined : 344">
     <v-img :src="courseImage" height="200px"></v-img>
     <v-card-title> {{ course.title }} </v-card-title>
 

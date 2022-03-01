@@ -2,11 +2,11 @@
   <pnc-base-page :title="title" :backRoute="backRoute">
     <template v-slot:description v-if="course">
       <v-subheader class="px-0 mt-md-4 mb-md-0 mt-8 mb-4 text-subtitle-1" v-if="course.description">
-        <b>Description:</b> 
+        <b>Description:</b>
         <span class="ml-2">{{ course.description }}</span>
       </v-subheader>
     </template>
-    
+
     <v-container fluid class="px-6">
       <v-row align="center" justify="center">
         <v-col cols="12">
@@ -14,13 +14,24 @@
         </v-col>
       </v-row>
       <v-row align="center" justify="center">
-        <v-col cols="12">
-          <v-text-field v-model="searchGroup" label="Search" dense solo outlined clearable hide-details prepend-inner-icon="mdi-magnify" />
+        <v-col cols="12" class="d-flex align-center">
+          <v-text-field
+            class="flex-grow-1 flex-shrink-1"
+            v-model="searchGroup"
+            label="Search"
+            dense
+            solo
+            outlined
+            clearable
+            hide-details
+            prepend-inner-icon="mdi-magnify"
+          />
+          <v-btn class="ml-4" depressed color="primary">ADD</v-btn>
         </v-col>
       </v-row>
       <v-row align="start" justify="start">
         <v-col v-for="group of filteredGroups" :key="group.id" cols="12" sm="4">
-          <group-card :group="group" />
+          <group-card :group="group" @edit="edit(group)" @remove="remove(group)" />
         </v-col>
       </v-row>
     </v-container>
@@ -37,11 +48,12 @@ import GroupHandlerMixin from "@/mixins/handlers/GroupHandlerMixin";
 
 import PncBasePage from "@/components/gears/bases/PncBasePage.vue";
 import GroupCard from "./group-card/GroupCard.vue";
+import { ActionTypes } from "@/store";
 
 @Component({
   components: {
     PncBasePage,
-    GroupCard
+    GroupCard,
   },
 })
 export default class Course extends Mixins(CourseHandlerMixin, GroupHandlerMixin) {
@@ -54,7 +66,7 @@ export default class Course extends Mixins(CourseHandlerMixin, GroupHandlerMixin
 
   private course: CourseType | null = null;
   private groups: Group[] = [];
-  private searchGroup = '';
+  private searchGroup = "";
   private backRoute: Location = { name: "dashboard-courses" };
 
   /* GETTERS */
@@ -66,6 +78,20 @@ export default class Course extends Mixins(CourseHandlerMixin, GroupHandlerMixin
   get filteredGroups(): Group[] {
     return this.groups.filter((group) => {
       return group.name.toLowerCase().includes(this.searchGroup.toLowerCase());
+    });
+  }
+
+  /* METHODS */
+
+  async remove(group: Group): Promise<void> {
+    this.$store.dispatch(ActionTypes.SHOW_CONFIRM_DIALOG, {
+      text: `Are you sure you want to remove the group "${group.name}"?`,
+      callback: async (answer) => {
+        if (answer) {
+          await this.deleteGroup(group.courseId, group.id);
+          this.groups = this.groups.filter((g) => g.id !== group.id);
+        }
+      },
     });
   }
 

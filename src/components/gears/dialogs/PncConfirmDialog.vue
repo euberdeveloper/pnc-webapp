@@ -15,7 +15,7 @@
 
       <v-card-actions class="pa-3">
         <v-spacer></v-spacer>
-        <v-btn color="primary" outlined @click="action(true)">SÌ</v-btn>
+        <v-btn color="primary" outlined @click="action(true)">YES</v-btn>
         <v-btn color="error" outlined @click="action(false)">NO</v-btn>
         <v-spacer></v-spacer>
       </v-card-actions>
