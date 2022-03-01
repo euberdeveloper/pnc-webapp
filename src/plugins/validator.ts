@@ -52,11 +52,17 @@ const validator = {
     unique(values: string[]): InputValidationRule {
         return value => (!value || !values.includes(value)) || `This value is already present`;
     },
-    max(n: number): InputValidationRule {
+    max(n: string): InputValidationRule {
         return value => (!value || value.length <= n) || `Maximum length is ${n}`
     },
-    min(n: number): InputValidationRule {
+    min(n: string): InputValidationRule {
         return value => (!value || value.length >= n) || `Minimum length is ${n}`
+    },
+    lte(n: number): InputValidationRule {
+        return value => (value <= n) || `Maximum value is ${n}`
+    },
+    gte(n: number): InputValidationRule {
+        return value => (value >= n) || `Minimum value is ${n}`
     },
     length(n: number): InputValidationRule {
         return value => (!value || value.length === n) || `Length must be exactly ${n}`

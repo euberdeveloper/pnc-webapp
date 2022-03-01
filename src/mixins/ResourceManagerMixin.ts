@@ -7,7 +7,7 @@ import { DataOptions } from "vuetify";
 import { ActionTypes } from "@/store";
 
 @Component
-export default class ResourceManagerMixin<TupleType = any, CreateType = any, UpdateType = any, IdType = number, ExportedType = TupleType> extends Vue {
+export default class ResourceManagerMixin<TupleType = any, CreateType = any, UpdateType = any, IdType = number> extends Vue {
     /* DATA */
 
     private internalBackupValue: TupleType | null = { a: 0 } as any;

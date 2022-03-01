@@ -15,7 +15,7 @@
     :options.sync="internalOptions"
     :server-items-length="serverItemsLength"
     :footer-props="{itemsPerPageOptions}"
-    :class="['operatn-base-table', elevationClass]"
+    :class="['pnc-base-table', elevationClass]"
     @click:row="rowClicked($event)"
   >
     <template v-slot:top>
@@ -352,7 +352,7 @@ export default class PncBaseTable extends Vue {
 </script>
 
 <style lang="scss" scoped>
-.operatn-base-table ::v-deep {
+.pnc-base-table ::v-deep {
   th {
     white-space: nowrap;
   }
@@ -374,7 +374,7 @@ export default class PncBaseTable extends Vue {
   }
 }
 
-.operatn-base-table {
+.pnc-base-table {
   .icons-col {
     white-space: nowrap;
   }

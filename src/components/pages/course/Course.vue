@@ -26,7 +26,7 @@
             hide-details
             prepend-inner-icon="mdi-magnify"
           />
-          <v-btn class="ml-4" depressed color="primary">ADD</v-btn>
+          <v-btn class="ml-4" depressed color="primary" @click="openCreate">ADD</v-btn>
         </v-col>
       </v-row>
       <v-row align="start" justify="start">
@@ -35,24 +35,34 @@
         </v-col>
       </v-row>
     </v-container>
+
+    <!-- CREATE DIALOG -->
+    <pnc-action-dialog title="New group" v-model="showCreateDialog" :disabled="!createValid" @cancel="closeCreate(false)" @confirm="closeCreate(true)">
+      <pnc-group-form v-if="showCreateDialog" v-model="createBody" :formValid.sync="createBodyValid" :groupsNames="groupsNames" class="mt-6" />
+    </pnc-action-dialog>
   </pnc-base-page>
 </template>
 
 <script lang="ts">
 import { Component, Mixins, Prop } from "vue-property-decorator";
 import { Location } from "vue-router";
-import { Course as CourseType, Group } from "pnc-sdk";
+import { Course as CourseType, Group, GroupsCreateBody } from "pnc-sdk";
+
+import { ActionTypes } from "@/store";
 
 import CourseHandlerMixin from "@/mixins/handlers/CourseHandlerMixin";
 import GroupHandlerMixin from "@/mixins/handlers/GroupHandlerMixin";
 
 import PncBasePage from "@/components/gears/bases/PncBasePage.vue";
+import PncActionDialog from "@/components/gears/dialogs/PncActionDialog.vue";
+import PncGroupForm from "@/components/gears/forms/PncGroupForm.vue";
 import GroupCard from "./group-card/GroupCard.vue";
-import { ActionTypes } from "@/store";
 
 @Component({
   components: {
     PncBasePage,
+    PncActionDialog,
+    PncGroupForm,
     GroupCard,
   },
 })
@@ -69,6 +79,11 @@ export default class Course extends Mixins(CourseHandlerMixin, GroupHandlerMixin
   private searchGroup = "";
   private backRoute: Location = { name: "dashboard-courses" };
 
+  private showCreateDialog = false;
+  private createBodyValid = false;
+  private createLoading = false;
+  private createBody: GroupsCreateBody | null = null;
+
   /* GETTERS */
 
   get title(): string {
@@ -79,6 +94,15 @@ export default class Course extends Mixins(CourseHandlerMixin, GroupHandlerMixin
     return this.groups.filter((group) => {
       return group.name.toLowerCase().includes(this.searchGroup.toLowerCase());
     });
+  }
+
+  get groupsNames(): string[] {
+    // TODO: add backup value
+    return this.getGroupsNames(this.groups, null);
+  }
+
+  get createValid(): boolean {
+    return this.createBodyValid && !this.createLoading;
   }
 
   /* METHODS */
@@ -93,6 +117,41 @@ export default class Course extends Mixins(CourseHandlerMixin, GroupHandlerMixin
         }
       },
     });
+  }
+
+  openCreate(): void {
+    this.createBodyValid = false;
+    this.showCreateDialog = true;
+  }
+  async closeCreate(save: boolean): Promise<void> {
+    if (!save) {
+      this.createBody = null;
+      this.showCreateDialog = false;
+      return;
+    }
+
+    if (this.createBodyValid && this.createBody) {
+      try {
+        this.createLoading = true;
+        const id = await this.createGroup(this.courseId, this.createBody);
+        this.groups.push({
+          id,
+          courseId: this.courseId,
+          name: this.createBody.name,
+          description: this.createBody.description,
+          maxPartecipants: this.createBody.maxPartecipants,
+          partecipants: [],
+          creationDate: new Date(),
+        });
+
+        this.createBody = null;
+        this.showCreateDialog = false;
+      } catch (error) {
+        console.error(error);
+      } finally {
+        this.createLoading = false;
+      }
+    }
   }
 
   /* LIFE CYCLE */
