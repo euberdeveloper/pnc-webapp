@@ -12,3 +12,5 @@ cd ..
 
 echo "Passing all the new static files from dist to site"
 cp dist/* site -rf
+
+echo "Finished!!!";
