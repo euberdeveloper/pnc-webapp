@@ -40,8 +40,8 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop, Watch } from "vue-property-decorator";
-// TODO: set to pnc-sdk
-import { GroupsCreateBody } from "pnc-sdk/api/controllers/courses/groups";
+// TODO: set to @prebenorwegian/sdk
+import { GroupsCreateBody } from "@prebenorwegian/sdk/api/controllers/courses/groups";
 
 @Component({
   model: {

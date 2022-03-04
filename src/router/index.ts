@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import VueRouter, { RouteConfig } from 'vue-router';
-import { UserRole } from 'pnc-sdk';
+import { UserRole } from '@prebenorwegian/sdk';
 
 import rootRedirect from './utils/rootRedirect';
 import beforeEach from './utils/beforeEach';

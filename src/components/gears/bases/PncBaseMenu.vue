@@ -28,7 +28,7 @@
 
 <script lang="ts">
 import { Component, Prop, Mixins } from "vue-property-decorator";
-import { UserRole } from "pnc-sdk";
+import { UserRole } from "@prebenorwegian/sdk";
 
 import { MutationTypes } from "@/store";
 import CONFIG from "@/config";

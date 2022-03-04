@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-import { UserRole } from "pnc-sdk";
+import { UserRole } from "@prebenorwegian/sdk";
 import CONFIG from '@/config';
 
 export function getRoleIcon(role?: UserRole | null): string | null {

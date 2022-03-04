@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { UserRole } from 'pnc-sdk';
+import { UserRole } from '@prebenorwegian/sdk';
 
 import { PluginObject } from 'vue/types/umd';
 import { InputValidationRule } from 'vuetify';

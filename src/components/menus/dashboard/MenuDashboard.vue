@@ -6,7 +6,7 @@
 import { Component, Vue } from "vue-property-decorator";
 
 import PncBaseMenu, { MenuItem } from "@/components/gears/bases/PncBaseMenu.vue";
-import { UserRole } from "pnc-sdk";
+import { UserRole } from "@prebenorwegian/sdk";
 
 @Component({
   components: {

@@ -1,5 +1,5 @@
 import { MutationTree } from 'vuex'
-import { User } from 'pnc-sdk';
+import { User } from '@prebenorwegian/sdk';
 
 import { AlertDialogMessage, QueueMessage, State, Toast } from './state'
 

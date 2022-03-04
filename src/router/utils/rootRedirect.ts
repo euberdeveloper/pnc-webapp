@@ -1,5 +1,5 @@
 import store from '@/store';
-import { UserRole } from 'pnc-sdk';
+import { UserRole } from '@prebenorwegian/sdk';
 
 export default function (isRoot: boolean): () => string {
   return () => {

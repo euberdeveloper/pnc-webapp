@@ -1,5 +1,5 @@
 import { NavigationGuard } from 'vue-router';
-import { UserRole } from 'pnc-sdk';
+import { UserRole } from '@prebenorwegian/sdk';
 import store from '@/store';
 
 const beforeEach: NavigationGuard = function (to, _from, next) {
