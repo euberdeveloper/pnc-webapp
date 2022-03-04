@@ -1,4 +1,4 @@
-import { PncSDK } from 'pnc-sdk';
+import { PncSDK } from '@prebenorwegian/sdk';
 import { Validator } from '@/plugins/validator';
 
 declare module 'vue/types/vue' {

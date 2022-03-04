@@ -1,6 +1,6 @@
 
 import { Component, Vue } from "vue-property-decorator";
-import { Course, NotFoundError } from "pnc-sdk";
+import { Course, NotFoundError } from "@prebenorwegian/sdk";
 
 import { ActionTypes, AlertType } from "@/store";
 

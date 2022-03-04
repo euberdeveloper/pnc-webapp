@@ -33,7 +33,7 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { Location } from "vue-router";
-import { Group } from "pnc-sdk";
+import { Group } from "@prebenorwegian/sdk";
 
 @Component
 export default class GroupCard extends Vue {

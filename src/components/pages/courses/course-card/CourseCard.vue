@@ -27,7 +27,7 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { Location } from "vue-router";
-import { Course } from "pnc-sdk";
+import { Course } from "@prebenorwegian/sdk";
 
 @Component
 export default class CourseCard extends Vue {

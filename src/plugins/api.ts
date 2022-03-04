@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { PncSDK } from "pnc-sdk";
+import { PncSDK } from "@prebenorwegian/sdk";
 
 import CONFIG from '@/config';
 

@@ -17,7 +17,7 @@
 
 <script lang="ts">
 import { Component, Mixins } from "vue-property-decorator";
-import { Course } from "pnc-sdk";
+import { Course } from "@prebenorwegian/sdk";
 
 import CourseHandlerMixin from "@/mixins/handlers/CourseHandlerMixin";
 

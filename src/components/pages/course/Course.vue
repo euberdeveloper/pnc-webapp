@@ -46,7 +46,7 @@
 <script lang="ts">
 import { Component, Mixins, Prop } from "vue-property-decorator";
 import { Location } from "vue-router";
-import { Course as CourseType, Group, GroupsCreateBody } from "pnc-sdk";
+import { Course as CourseType, Group, GroupsCreateBody } from "@prebenorwegian/sdk";
 
 import { ActionTypes } from "@/store";
 

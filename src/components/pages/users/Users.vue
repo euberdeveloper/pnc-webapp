@@ -42,7 +42,7 @@
 
 <script lang="ts">
 import { Component, Mixins } from "vue-property-decorator";
-import { User, UsersCreateBody } from "pnc-sdk";
+import { User, UsersCreateBody } from "@prebenorwegian/sdk";
 
 import { AlertType } from "@/store";
 import ResourceManagerMixin from "@/mixins/ResourceManagerMixin";

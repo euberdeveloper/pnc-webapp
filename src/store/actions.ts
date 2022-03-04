@@ -1,5 +1,5 @@
 import { ActionTree, ActionContext } from 'vuex'
-import { ApiError, ClientError, InvalidCredentialsError, RequestError, UnknownApiError, User } from 'pnc-sdk';
+import { ApiError, ClientError, InvalidCredentialsError, RequestError, UnknownApiError, User } from '@prebenorwegian/sdk';
 import router from '@/router';
 import api from '@/plugins/api';
 import { localStorage } from '@/utils';

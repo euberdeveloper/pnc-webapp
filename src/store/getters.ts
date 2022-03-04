@@ -1,4 +1,4 @@
-import { UserRole } from 'pnc-sdk';
+import { UserRole } from '@prebenorwegian/sdk';
 import { GetterTree } from 'vuex'
 
 import { getRoleIcon } from '@/utils';

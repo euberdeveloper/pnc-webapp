@@ -1,4 +1,4 @@
-import { User, UserRole } from "pnc-sdk"
+import { User, UserRole } from "@prebenorwegian/sdk"
 
 export interface Toast {
     message: string;

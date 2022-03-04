@@ -1,6 +1,6 @@
 
 import { Component, Vue } from "vue-property-decorator";
-import { BadRequestError, InvalidBodyError, InvalidPathParamError, NotFoundError, Group, GroupsCreateBody } from "pnc-sdk";
+import { BadRequestError, InvalidBodyError, InvalidPathParamError, NotFoundError, Group, GroupsCreateBody } from "@prebenorwegian/sdk";
 
 import { ActionTypes, AlertType } from "@/store";
 

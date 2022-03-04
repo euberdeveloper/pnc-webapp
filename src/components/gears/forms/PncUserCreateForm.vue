@@ -58,7 +58,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop, Watch } from "vue-property-decorator";
-import { UserRole, UsersCreateBody } from "pnc-sdk";
+import { UserRole, UsersCreateBody } from "@prebenorwegian/sdk";
 
 @Component({
   model: {
