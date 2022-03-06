@@ -20,7 +20,7 @@
 
       <v-row align="center" justify="end">
         <v-btn icon @click="$emit('edit')">
-          <v-icon color="blue">mdi-pencil</v-icon>
+          <v-icon color="blue darken-3">mdi-pencil</v-icon>
         </v-btn>
         <v-btn class="mr-2" icon @click="$emit('remove')">
           <v-icon color="red">mdi-delete</v-icon>
