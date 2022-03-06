@@ -1,8 +1,8 @@
 <template>
-  <v-card class="group-card mx-auto" color="#26c6da" dark>
+  <v-card :to="groupRoute" class="group-card mx-auto" color="#26c6da" dark>
     <v-card-title>
       <span class="text-h6 font-weight-light d-flex" style="width: 100%">
-        <router-link class="name" :to="groupRoute" >{{ group.name }}</router-link>
+        <span class="name">{{ group.name }}</span>
         <span class="flex-grow-1" />
         <span class="creation">{{ creation }}</span>
       </span>
@@ -19,10 +19,10 @@
       </span>
 
       <v-row align="center" justify="end">
-        <v-btn icon @click="$emit('edit')">
+        <v-btn icon @click.prevent="$emit('edit')">
           <v-icon color="blue darken-3">mdi-pencil</v-icon>
         </v-btn>
-        <v-btn class="mr-2" icon @click="$emit('remove')">
+        <v-btn class="mr-2" icon @click.prevent="$emit('remove')">
           <v-icon color="red">mdi-delete</v-icon>
         </v-btn>
       </v-row>
@@ -54,12 +54,3 @@ export default class GroupCard extends Vue {
   }
 }
 </script>
-
-<style lang="scss" scoped>
-.group-card {
-  .name {
-    text-decoration: none;
-    color: white;
-  }
-}
-</style>
