@@ -1,8 +1,8 @@
 <template>
-  <v-card class="group-card mx-auto" color="#26c6da" dark>
+  <v-card :to="groupRoute" class="group-card mx-auto" color="#26c6da" dark>
     <v-card-title>
       <span class="text-h6 font-weight-light d-flex" style="width: 100%">
-        <router-link class="name" :to="groupRoute" >{{ group.name }}</router-link>
+        <span class="name">{{ group.name }}</span>
         <span class="flex-grow-1" />
         <span class="creation">{{ creation }}</span>
       </span>
@@ -19,11 +19,11 @@
       </span>
 
       <v-row align="center" justify="end">
-        <v-btn class="blue--text text--darken-3" text icon @click="$emit('edit')">
-          <v-icon>mdi-pencil</v-icon>
+        <v-btn icon @click.prevent="$emit('edit')">
+          <v-icon color="blue darken-3">mdi-pencil</v-icon>
         </v-btn>
-        <v-btn color="red" class="mr-2" icon @click="$emit('remove')">
-          <v-icon>mdi-delete</v-icon>
+        <v-btn class="mr-2" icon @click.prevent="$emit('remove')">
+          <v-icon color="red">mdi-delete</v-icon>
         </v-btn>
       </v-row>
     </v-card-actions>
@@ -45,8 +45,7 @@ export default class GroupCard extends Vue {
   /* GETTERS */
 
   get creation(): string {
-    // TODO: handle date on sdk
-    return new Date(this.group.creationDate).toLocaleDateString();
+    return this.group.creationDate.toLocaleDateString();
   }
 
   get groupRoute(): Location {
@@ -54,12 +53,3 @@ export default class GroupCard extends Vue {
   }
 }
 </script>
-
-<style lang="scss" scoped>
-.group-card {
-  .name {
-    text-decoration: none;
-    color: white;
-  }
-}
-</style>

@@ -40,8 +40,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop, Watch } from "vue-property-decorator";
-// TODO: set to @prebenorwegian/sdk
-import { GroupsCreateBody } from "@prebenorwegian/sdk/api/controllers/courses/groups";
+import { GroupsCreateBody } from "@prebenorwegian/sdk";
 
 @Component({
   model: {
