@@ -116,6 +116,15 @@ export default class PncGroupForm extends Vue {
         start: null as unknown as Date,
         end: null as unknown as Date,
       },
+      weekSchedule: {
+        monday: null,
+        tuesday: null,
+        wednesday: null,
+        thursday: null,
+        friday: null,
+        saturday: null,
+        sunday: null,
+      },
     };
   }
 

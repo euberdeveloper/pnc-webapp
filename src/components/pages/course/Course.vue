@@ -50,7 +50,7 @@
 <script lang="ts">
 import { Component, Mixins, Prop } from "vue-property-decorator";
 import { Location } from "vue-router";
-import { Course as CourseType, Group, GroupsCreateBody, GroupsUpdateBody } from "@prebenorwegian/sdk";
+import { Course as CourseType, Group, GroupsCreateBody, GroupsUpdateBody, WeekSchedule } from "@prebenorwegian/sdk";
 
 import { ActionTypes } from "@/store";
 
@@ -62,7 +62,7 @@ import PncActionDialog from "@/components/gears/dialogs/PncActionDialog.vue";
 import PncGroupForm from "@/components/gears/forms/PncGroupForm.vue";
 import GroupCard from "./group-card/GroupCard.vue";
 
-type GroupsUpdateBodyStrict = Required<GroupsUpdateBody>;
+type GroupsUpdateBodyStrict = Required<GroupsUpdateBody> & { weekSchedule: WeekSchedule };
 
 @Component({
   components: {
@@ -153,6 +153,15 @@ export default class Course extends Mixins(CourseHandlerMixin, GroupHandlerMixin
           maxPartecipants: this.createBody.maxPartecipants,
           lecturePeriod: this.createBody.lecturePeriod,
           partecipants: [],
+          weekSchedule: {
+            monday: null,
+            tuesday: null,
+            wednesday: null,
+            thursday: null,
+            friday: null,
+            saturday: null,
+            sunday: null,
+          },
           creationDate: new Date(),
         });
 
@@ -175,6 +184,7 @@ export default class Course extends Mixins(CourseHandlerMixin, GroupHandlerMixin
       description: updateBody.description,
       maxPartecipants: updateBody.maxPartecipants,
       lecturePeriod: updateBody.lecturePeriod,
+      weekSchedule: updateBody.weekSchedule,
       partecipants: this.backupValue?.partecipants ?? [],
       creationDate: this.backupValue?.creationDate ?? new Date(),
     });
@@ -185,7 +195,8 @@ export default class Course extends Mixins(CourseHandlerMixin, GroupHandlerMixin
       name: value.name,
       description: value.description,
       maxPartecipants: value.maxPartecipants,
-      lecturePeriod: value.lecturePeriod
+      lecturePeriod: value.lecturePeriod,
+      weekSchedule: value.weekSchedule
     };
     this.updateId = value.id;
   }

@@ -42,7 +42,8 @@ export default class GroupHandlerMixin extends Vue {
         name: body.name,
         description: body.description,
         maxPartecipants: body.maxPartecipants,
-        lecturePeriod: body.lecturePeriod
+        lecturePeriod: body.lecturePeriod,
+        weekSchedule: body.weekSchedule,
       }, { alertType });
     } catch (error) {
       if (error) {
