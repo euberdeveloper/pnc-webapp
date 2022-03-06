@@ -50,7 +50,7 @@
 <script lang="ts">
 import { Component, Mixins, Prop } from "vue-property-decorator";
 import { Location } from "vue-router";
-import { Course as CourseType, Group, GroupsCreateBody } from "@prebenorwegian/sdk";
+import { Course as CourseType, Group, GroupsCreateBody, GroupsUpdateBody } from "@prebenorwegian/sdk";
 
 import { ActionTypes } from "@/store";
 
@@ -61,7 +61,8 @@ import PncBasePage from "@/components/gears/bases/PncBasePage.vue";
 import PncActionDialog from "@/components/gears/dialogs/PncActionDialog.vue";
 import PncGroupForm from "@/components/gears/forms/PncGroupForm.vue";
 import GroupCard from "./group-card/GroupCard.vue";
-import { GroupsUpdateBody } from "@prebenorwegian/sdk/api";
+
+type GroupsUpdateBodyStrict = Required<GroupsUpdateBody>;
 
 @Component({
   components: {
@@ -92,7 +93,7 @@ export default class Course extends Mixins(CourseHandlerMixin, GroupHandlerMixin
   private backupValue: Group | null = null;
   private showEditDialog = false;
   private updateBodyValid = false;
-  private updateBody: GroupsUpdateBody | null = null;
+  private updateBody: GroupsUpdateBodyStrict | null = null;
   private updateId: string | null = null;
 
   /* GETTERS */
@@ -150,6 +151,7 @@ export default class Course extends Mixins(CourseHandlerMixin, GroupHandlerMixin
           name: this.createBody.name,
           description: this.createBody.description,
           maxPartecipants: this.createBody.maxPartecipants,
+          lecturePeriod: this.createBody.lecturePeriod,
           partecipants: [],
           creationDate: new Date(),
         });
@@ -164,17 +166,18 @@ export default class Course extends Mixins(CourseHandlerMixin, GroupHandlerMixin
     }
   }
 
-  reflectUpdate(id: string, updateBody: GroupsUpdateBody): void {
+  reflectUpdate(id: string, updateBody: GroupsUpdateBodyStrict): void {
     const index = this.values.findIndex((v) => v.id === id);
-      this.values.splice(index, 1, {
-        id,
-        courseId: this.courseId,
-        name: updateBody.name,
-        description: updateBody.description,
-        maxPartecipants: updateBody.maxPartecipants,
-        partecipants: this.backupValue?.partecipants ?? [],
-        creationDate: this.backupValue?.creationDate ?? new Date()
-      });
+    this.values.splice(index, 1, {
+      id,
+      courseId: this.courseId,
+      name: updateBody.name,
+      description: updateBody.description,
+      maxPartecipants: updateBody.maxPartecipants,
+      lecturePeriod: updateBody.lecturePeriod,
+      partecipants: this.backupValue?.partecipants ?? [],
+      creationDate: this.backupValue?.creationDate ?? new Date(),
+    });
   }
   async prepareUpdateBody(value: Group): Promise<void> {
     this.backupValue = value;
@@ -182,6 +185,7 @@ export default class Course extends Mixins(CourseHandlerMixin, GroupHandlerMixin
       name: value.name,
       description: value.description,
       maxPartecipants: value.maxPartecipants,
+      lecturePeriod: value.lecturePeriod
     };
     this.updateId = value.id;
   }

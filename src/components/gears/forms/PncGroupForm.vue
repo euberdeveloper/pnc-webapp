@@ -22,6 +22,8 @@
             v-model="internalValue.description"
           />
         </v-col>
+      </v-row>
+      <v-row align="center" justify="center">
         <v-col cols="12">
           <v-text-field
             type="number"
@@ -30,6 +32,28 @@
             clearable
             :rules="[$validator.requiredText('Max. partecipants'), $validator.number(), $validator.gte(1)]"
             v-model="internalValue.maxPartecipants"
+          />
+        </v-col>
+      </v-row>
+      <v-row align="center" justify="center">
+        <v-col cols="6">
+          <pnc-date-input
+            type="text"
+            label="Start date"
+            name="startDate"
+            clearable
+            :rules="[$validator.requiredText('Start date')]"
+            v-model="internalValue.lecturePeriod.start"
+          />
+        </v-col>
+        <v-col cols="6">
+          <pnc-date-input
+            type="text"
+            label="End date"
+            name="endDate"
+            clearable
+            :rules="[$validator.requiredText('End date'), $validator.after(internalValue.lecturePeriod.start, internalValue.lecturePeriod.end)]"
+            v-model="internalValue.lecturePeriod.end"
           />
         </v-col>
       </v-row>
@@ -42,10 +66,15 @@ import Vue from "vue";
 import { Component, Prop, Watch } from "vue-property-decorator";
 import { GroupsCreateBody } from "@prebenorwegian/sdk";
 
+import PncDateInput from "@/components/gears/inputs/PncDateInput.vue";
+
 @Component({
   model: {
     prop: "value",
     event: "save",
+  },
+  components: {
+    PncDateInput,
   },
 })
 export default class PncGroupForm extends Vue {
@@ -83,6 +112,10 @@ export default class PncGroupForm extends Vue {
       name: "",
       description: "",
       maxPartecipants: null as unknown as number,
+      lecturePeriod: {
+        start: null as unknown as Date,
+        end: null as unknown as Date,
+      },
     };
   }
 
