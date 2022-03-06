@@ -9,10 +9,8 @@
     </v-card-title>
 
     <v-card-text class="text-h6">
-      <span>"{{ group.description }}"</span>
-      <br />
       <span>
-        From <u><b>{{ lecturePeriod.start }}</b></u> to <u><b>{{ lecturePeriod.end }}</b></u>
+        "From <u><b>{{ lecturePeriod.start }}</b></u> to <u><b>{{ lecturePeriod.end }}</b></u>"
       </span>
     </v-card-text>
 
