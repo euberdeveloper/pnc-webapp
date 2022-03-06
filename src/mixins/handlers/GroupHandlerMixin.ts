@@ -1,6 +1,6 @@
 
 import { Component, Vue } from "vue-property-decorator";
-import { BadRequestError, InvalidBodyError, InvalidPathParamError, NotFoundError, Group, GroupsCreateBody } from "@prebenorwegian/sdk";
+import { BadRequestError, InvalidBodyError, InvalidPathParamError, NotFoundError, Group, GroupsCreateBody, GroupsUpdateBody } from "@prebenorwegian/sdk";
 
 import { ActionTypes, AlertType } from "@/store";
 
@@ -30,6 +30,27 @@ export default class GroupHandlerMixin extends Vue {
           this.$store.dispatch(ActionTypes.ALERT, { message: `Wrong provided data: ${error.message}`, alertType });
         } else if (error instanceof BadRequestError) {
           this.$store.dispatch(ActionTypes.ALERT, { message: `Invalid request: ${error.message}`, alertType });
+        }
+      }
+      throw error;
+    }
+  }
+
+  async updateGroup(courseId: string, groupId: string, body: GroupsUpdateBody, alertType = AlertType.ERROR_ALERT): Promise<void> {
+    try {
+      await this.$api.courses.groups(courseId).update(groupId, {
+        name: body.name,
+        description: body.description,
+        maxPartecipants: body.maxPartecipants
+      }, { alertType });
+    } catch (error) {
+      if (error) {
+        if (error instanceof InvalidBodyError) {
+          this.$store.dispatch(ActionTypes.ALERT, { message: `Wrong provided data: ${error.message}`, alertType });
+        } else if (error instanceof BadRequestError) {
+          this.$store.dispatch(ActionTypes.ALERT, { message: `Invalid request: ${error.message}`, alertType });
+        } else if (error instanceof NotFoundError) {
+          this.$store.dispatch(ActionTypes.ALERT, { message: `Group not found: ${error.message}`, alertType });
         }
       }
       throw error;
