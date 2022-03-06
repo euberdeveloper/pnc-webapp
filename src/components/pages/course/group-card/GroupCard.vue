@@ -19,11 +19,11 @@
       </span>
 
       <v-row align="center" justify="end">
-        <v-btn class="blue--text text--darken-3" text icon @click="$emit('edit')">
-          <v-icon>mdi-pencil</v-icon>
+        <v-btn icon @click="$emit('edit')">
+          <v-icon color="blue">mdi-pencil</v-icon>
         </v-btn>
-        <v-btn color="red" class="mr-2" icon @click="$emit('remove')">
-          <v-icon>mdi-delete</v-icon>
+        <v-btn class="mr-2" icon @click="$emit('remove')">
+          <v-icon color="red">mdi-delete</v-icon>
         </v-btn>
       </v-row>
     </v-card-actions>
