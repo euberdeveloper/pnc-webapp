@@ -45,8 +45,7 @@ export default class GroupCard extends Vue {
   /* GETTERS */
 
   get creation(): string {
-    // TODO: handle date on sdk
-    return new Date(this.group.creationDate).toLocaleDateString();
+    return this.group.creationDate.toLocaleDateString();
   }
 
   get groupRoute(): Location {
