@@ -57,12 +57,25 @@
     </v-container>
 
     <!-- CREATE DIALOG -->
-    <pnc-action-dialog title="New group" v-model="showCreateDialog" :disabled="!createBodyValid" @cancel="closeCreate(false)" @confirm="closeCreate(true)">
+    <pnc-action-dialog title="New group" v-model="showCreateDialog" :disabled="!createValid" @cancel="closeCreate(false)" @confirm="closeCreate(true)">
       <pnc-group-form v-if="showCreateDialog" v-model="createBody" :formValid.sync="createBodyValid" :groupsNames="groupsNames" class="mt-6" />
     </pnc-action-dialog>
     <!-- EDIT DIALOG -->
-    <pnc-action-dialog title="Edit group" v-model="showEditDialog" :disabled="!updateBodyValid" @cancel="closeEdit(false)" @confirm="closeEdit(true)">
+    <pnc-action-dialog title="Edit group" v-model="showEditDialog" :disabled="!updateValid" @cancel="closeEdit(false)" @confirm="closeEdit(true)">
       <pnc-group-form v-if="showEditDialog" v-model="updateBody" :formValid.sync="updateBodyValid" :groupsNames="groupsNames" class="mt-6" />
+    </pnc-action-dialog>
+    <!-- ENROLL DIALOG -->
+    <pnc-action-dialog title="Enroll student" v-model="showEnrollDialog" :disabled="!enrollValid" @cancel="closeEnroll(false)" @confirm="closeEnroll(true)">
+      <v-select
+        label="Group"
+        name="groupIdToEnroll"
+        clearable
+        item-text="name"
+        item-value="id"
+        :items="values"
+        :rules="[$validator.requiredText('Group')]"
+        v-model="groupIdToEnroll"
+      />
     </pnc-action-dialog>
   </pnc-base-page>
 </template>
@@ -141,7 +154,7 @@ export default class Course extends Mixins(CourseHandlerMixin, GroupHandlerMixin
         title: "Enroll",
         icon: "mdi-account-plus",
         color: "blue",
-        action: (student: HandledStudent) => {}, //this.enroll(student),
+        action: (student: HandledStudent) => this.openEnroll(student),
         showAction: (student: HandledStudent) => student.group === null,
       },
       {
@@ -154,6 +167,11 @@ export default class Course extends Mixins(CourseHandlerMixin, GroupHandlerMixin
     ],
   };
 
+  private showEnrollDialog = false;
+  private enrollLoading = false;
+  private groupIdToEnroll: string | null = null;
+  private studentToEnroll: HandledStudent | null = null;
+
   private showCreateDialog = false;
   private createBodyValid = false;
   private createLoading = false;
@@ -163,6 +181,7 @@ export default class Course extends Mixins(CourseHandlerMixin, GroupHandlerMixin
   private showEditDialog = false;
   private updateBodyValid = false;
   private updateBody: GroupsUpdateBodyStrict | null = null;
+  private updateLoading = false;
   private updateId: string | null = null;
 
   /* GETTERS */
@@ -185,6 +204,14 @@ export default class Course extends Mixins(CourseHandlerMixin, GroupHandlerMixin
     return this.createBodyValid && !this.createLoading;
   }
 
+  get updateValid(): boolean {
+    return this.updateBodyValid && !this.updateLoading;
+  }
+
+  get enrollValid(): boolean {
+    return this.enrollBodyValid && !this.enrollLoading;
+  }
+
   get handledEnrolledStudents(): HandledStudent[] {
     return this.enrolledStudents.map((student) => ({
       id: student.id,
@@ -202,6 +229,10 @@ export default class Course extends Mixins(CourseHandlerMixin, GroupHandlerMixin
     return this.selectedGroupIndex !== null ? this.values[this.selectedGroupIndex] : null;
   }
 
+  get enrollBodyValid(): boolean {
+    return this.groupIdToEnroll !== null;
+  }
+
   /* METHODS */
 
   rowBackgrounds(item: any): RowColors {
@@ -214,12 +245,6 @@ export default class Course extends Mixins(CourseHandlerMixin, GroupHandlerMixin
 
   toggle(index: number): void {
     this.selectedGroupIndex = this.selectedGroupIndex === index ? null : index;
-  }
-
-  async enroll(student: HandledStudent, groupId: string): Promise<void> {
-    if (student.group === null) {
-      await this.groupAddPartecipant(this.courseId, groupId, student.id);
-    }
   }
 
   askUnenroll(student: HandledStudent): void {
@@ -253,6 +278,36 @@ export default class Course extends Mixins(CourseHandlerMixin, GroupHandlerMixin
         }
       },
     });
+  }
+
+  openEnroll(student: HandledStudent): void {
+    this.studentToEnroll = student;
+    this.showEnrollDialog = true;
+  }
+  async closeEnroll(save: boolean): Promise<void> {
+    if (!save) {
+      this.groupIdToEnroll = null;
+      this.showEnrollDialog = false;
+      return;
+    }
+
+    if (this.enrollValid && this.groupIdToEnroll && this.studentToEnroll) {
+      try {
+        this.enrollLoading = true;
+        await this.groupAddPartecipant(this.courseId, this.groupIdToEnroll, this.studentToEnroll.id);
+        const group = this.values.find((group) => group.id === this.groupIdToEnroll);
+        if (group) {
+          group.partecipants.push(this.studentToEnroll.id);
+        }
+
+        this.groupIdToEnroll = null;
+        this.showEnrollDialog = false;
+      } catch (error) {
+        console.error(error);
+      } finally {
+        this.enrollLoading = false;
+      }
+    }
   }
 
   openCreate(): void {
@@ -342,11 +397,18 @@ export default class Course extends Mixins(CourseHandlerMixin, GroupHandlerMixin
       return;
     }
 
-    if (this.updateBodyValid && this.updateBody && this.updateId) {
-      await this.updateGroup(this.courseId, this.updateId, this.updateBody);
-      this.reflectUpdate(this.updateId, this.updateBody);
-      this.sprepareUpdateBody();
-      this.showEditDialog = false;
+    if (this.updateValid && this.updateBody && this.updateId) {
+      try {
+        this.updateLoading = true;
+        await this.updateGroup(this.courseId, this.updateId, this.updateBody);
+        this.reflectUpdate(this.updateId, this.updateBody);
+        this.sprepareUpdateBody();
+        this.showEditDialog = false;
+      } catch (error) {
+        console.error(error);
+      } finally {
+        this.updateLoading = false;
+      }
     }
   }
 
