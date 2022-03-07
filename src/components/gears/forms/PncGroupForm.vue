@@ -1,5 +1,5 @@
 <template>
-  <v-form v-model="internalFormValid" @submit.prevent v-if="internalValue">
+  <v-form v-model="inputsValid" @submit.prevent v-if="internalValue">
     <v-container fluid>
       <v-row align="center" justify="center">
         <v-col cols="6">
@@ -57,6 +57,11 @@
           />
         </v-col>
       </v-row>
+      <v-row align="center" justify="center">
+        <v-col cols="12">
+          <pnc-week-schedule-form v-model="internalValue.weekSchedule" :formValid.sync="weekScheduleFormValid" />
+        </v-col>
+      </v-row>
     </v-container>
   </v-form>
 </template>
@@ -67,6 +72,7 @@ import { Component, Prop, Watch } from "vue-property-decorator";
 import { GroupsCreateBody } from "@prebenorwegian/sdk";
 
 import PncDateInput from "@/components/gears/inputs/PncDateInput.vue";
+import PncWeekScheduleForm from "./week-schedule/PncWeekScheduleForm.vue";
 
 @Component({
   model: {
@@ -75,6 +81,7 @@ import PncDateInput from "@/components/gears/inputs/PncDateInput.vue";
   },
   components: {
     PncDateInput,
+    PncWeekScheduleForm,
   },
 })
 export default class PncGroupForm extends Vue {
@@ -89,6 +96,11 @@ export default class PncGroupForm extends Vue {
   @Prop({ type: Array, default: () => [] })
   groupsNames!: string[];
 
+  /* DATA */
+
+  public inputsValid = false;
+  public weekScheduleFormValid = false;
+
   /* GETTERS AND SETTERS */
 
   get internalValue() {
@@ -98,11 +110,8 @@ export default class PncGroupForm extends Vue {
     this.$emit("save", value);
   }
 
-  get internalFormValid() {
-    return this.formValid;
-  }
-  set internalFormValid(value) {
-    this.$emit("update:formValid", value);
+  get realFormValid() {
+    return this.inputsValid && this.weekScheduleFormValid;
   }
 
   /* METHODS */
@@ -135,6 +144,11 @@ export default class PncGroupForm extends Vue {
     if (this.value === null) {
       this.internalValue = this.getEmptyValue();
     }
+  }
+
+  @Watch("realFormValid")
+  watchRealFormValid() {
+    this.$emit('update:formValid', this.realFormValid);
   }
 }
 </script>
