@@ -15,7 +15,7 @@
       </v-row>
       <v-row>
         <v-col cols="12">
-          <pnc-base-table title="Students" :values="enrolledStudents" :columns="columns" :rowBackgrounds="rowBackgrounds" />
+          <pnc-base-table title="Students" :values="handledEnrolledStudents" :columns="columns" :rowBackgrounds="rowBackgrounds" />
         </v-col>
       </v-row>
     </v-container>
@@ -114,6 +114,11 @@ export default class Course extends Mixins(CourseHandlerMixin, GroupHandlerMixin
       text: "Email",
       value: "email",
     },
+    {
+      text: "Group",
+      value: "group",
+      itemTextHandler: (value: string | null) => value ?? 'None'
+    },
   ];
 
   private showCreateDialog = false;
@@ -147,10 +152,20 @@ export default class Course extends Mixins(CourseHandlerMixin, GroupHandlerMixin
     return this.createBodyValid && !this.createLoading;
   }
 
+  get handledEnrolledStudents() {
+    return this.enrolledStudents.map(student => ({
+      id: student.id,
+      username: student.username,
+      email: student.email,
+      group: this.values.find(group => group.partecipants.includes(student.id))?.name ?? null,
+    }));
+
+  }
+
   /* METHODS */
 
-  rowBackgrounds(item: Student): RowColors {
-    if (this.values.every((group) => !group.partecipants.includes(item.id))) {
+  rowBackgrounds(item: any): RowColors {
+    if (item.group === null) {
       return "soft-orange";
     }
 
