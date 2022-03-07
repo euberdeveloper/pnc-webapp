@@ -2,6 +2,7 @@
   <v-form class="d-flex align-center pa-1">
     <v-checkbox
       class="mt-0"
+      style="width: 165px"
       v-model="internalValue"
       :true-value="{ from: '', to: '' }"
       :false-value="null"
@@ -9,8 +10,8 @@
       :label="label"
       hide-details
     />
-    <span class="flex-grow-1" />
     <v-text-field
+    class="flex-grow-1 flex-shrink-1"
       type="text"
       label="From"
       placeholder="hh:mm"
@@ -24,7 +25,7 @@
       v-if="internalValue"
     />
     <v-text-field
-      class="ml-4"
+      class="ml-4 flex-grow-1 flex-shrink-1"
       type="text"
       label="To"
       placeholder="hh:mm"
