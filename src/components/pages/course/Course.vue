@@ -15,7 +15,7 @@
       </v-row>
       <v-row>
         <v-col cols="12">
-          <pnc-base-table title="Students" :values="handledEnrolledStudents" :columns="columns" :rowBackgrounds="rowBackgrounds" />
+          <pnc-base-table title="Students" :values="filteredEnrolledStudents" :columns="columns" :rowBackgrounds="rowBackgrounds" />
         </v-col>
       </v-row>
     </v-container>
@@ -43,8 +43,15 @@
         </v-col>
       </v-row>
       <v-row align="stretch" justify="start">
-        <v-col v-for="group of filteredGroups" :key="group.id" cols="12" sm="4">
-          <group-card style="height: 100%" :group="group" @edit="openEdit(group)" @remove="remove(group)" />
+        <v-col v-for="(group, index) of filteredGroups" :key="group.id" cols="12" sm="4">
+          <group-card
+            style="height: 100%"
+            :group="group"
+            :selected="index === selectedGroupIndex"
+            @edit="openEdit(group)"
+            @remove="remove(group)"
+            @toggle="toggle(index)"
+          />
         </v-col>
       </v-row>
     </v-container>
@@ -97,6 +104,7 @@ export default class Course extends Mixins(CourseHandlerMixin, GroupHandlerMixin
 
   private course: CourseType | null = null;
   private values: Group[] = [];
+  private selectedGroupIndex: number | null = null;
   private searchGroup = "";
   private backRoute: Location = { name: "dashboard-courses" };
 
@@ -116,8 +124,8 @@ export default class Course extends Mixins(CourseHandlerMixin, GroupHandlerMixin
     },
     {
       text: "Group",
-      value: "group",
-      itemTextHandler: (value: string | null) => value ?? 'None'
+      value: "group.name",
+      itemTextHandler: (value: string | null) => value ?? "None",
     },
   ];
 
@@ -153,13 +161,23 @@ export default class Course extends Mixins(CourseHandlerMixin, GroupHandlerMixin
   }
 
   get handledEnrolledStudents() {
-    return this.enrolledStudents.map(student => ({
+    return this.enrolledStudents.map((student) => ({
       id: student.id,
       username: student.username,
       email: student.email,
-      group: this.values.find(group => group.partecipants.includes(student.id))?.name ?? null,
+      group: this.values.find((group) => group.partecipants.includes(student.id)) ?? null,
     }));
+  }
 
+  get filteredEnrolledStudents() {
+    return this.handledEnrolledStudents.filter((student) => {
+      console.log(student.group);  console.log(this.selectedGroup); let res = this.selectedGroup === null || student.group?.id === this.selectedGroup.id
+      console.log(res); return res;
+    });
+  }
+
+  get selectedGroup(): Group | null {
+    return this.selectedGroupIndex !== null ? this.values[this.selectedGroupIndex] : null;
   }
 
   /* METHODS */
@@ -170,6 +188,10 @@ export default class Course extends Mixins(CourseHandlerMixin, GroupHandlerMixin
     }
 
     return "";
+  }
+
+  toggle(index: number): void {
+    this.selectedGroupIndex = this.selectedGroupIndex === index ? null : index;
   }
 
   async remove(group: Group): Promise<void> {
