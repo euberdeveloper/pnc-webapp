@@ -59,6 +59,36 @@ export default class GroupHandlerMixin extends Vue {
     }
   }
 
+  async groupAddPartecipant(courseId: string, groupId: string, studentId: string, alertType = AlertType.ERROR_ALERT): Promise<void> {
+    try {
+      await this.$api.courses.groups(courseId).addPartecipant(groupId, studentId, { alertType });
+    } catch (error) {
+      if (error) {
+        if (error instanceof BadRequestError) {
+          this.$store.dispatch(ActionTypes.ALERT, { message: `Invalid request: ${error.message}`, alertType });
+        } else if (error instanceof NotFoundError) {
+          this.$store.dispatch(ActionTypes.ALERT, { message: `Group not found: ${error.message}`, alertType });
+        }
+      }
+      throw error;
+    }
+  }
+
+  async groupRemovePartecipant(courseId: string, groupId: string, studentId: string, alertType = AlertType.ERROR_ALERT): Promise<void> {
+    try {
+      await this.$api.courses.groups(courseId).removePartecipant(groupId, studentId, { alertType });
+    } catch (error) {
+      if (error) {
+        if (error instanceof BadRequestError) {
+          this.$store.dispatch(ActionTypes.ALERT, { message: `Invalid request: ${error.message}`, alertType });
+        } else if (error instanceof NotFoundError) {
+          this.$store.dispatch(ActionTypes.ALERT, { message: `Group not found: ${error.message}`, alertType });
+        }
+      }
+      throw error;
+    }
+  }
+
   async deleteGroup(id: string, uid: string, alertType = AlertType.ERROR_ALERT): Promise<void> {
     try {
       await this.$api.courses.groups(id).delete(uid, { alertType });

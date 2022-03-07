@@ -15,7 +15,7 @@
       </v-row>
       <v-row>
         <v-col cols="12">
-          <pnc-base-table title="Students" :values="filteredEnrolledStudents" :columns="columns" :rowBackgrounds="rowBackgrounds" />
+          <pnc-base-table title="Students" :values="filteredEnrolledStudents" :columns="columns" :rowBackgrounds="rowBackgrounds" :actions="actions" />
         </v-col>
       </v-row>
     </v-container>
@@ -78,12 +78,19 @@ import CourseHandlerMixin from "@/mixins/handlers/CourseHandlerMixin";
 import GroupHandlerMixin from "@/mixins/handlers/GroupHandlerMixin";
 
 import PncBasePage from "@/components/gears/bases/PncBasePage.vue";
-import PncBaseTable, { Column, RowColors } from "@/components/gears/bases/PncBaseTable.vue";
+import PncBaseTable, { Actions, Column, RowColors } from "@/components/gears/bases/PncBaseTable.vue";
 import PncActionDialog from "@/components/gears/dialogs/PncActionDialog.vue";
 import PncGroupForm from "@/components/gears/forms/PncGroupForm.vue";
 import GroupCard from "./group-card/GroupCard.vue";
 
 type GroupsUpdateBodyStrict = Required<GroupsUpdateBody> & { weekSchedule: WeekSchedule };
+
+interface HandledStudent {
+  id: string;
+  username: string;
+  email: string;
+  group: Group | null;
+}
 
 @Component({
   components: {
@@ -128,6 +135,24 @@ export default class Course extends Mixins(CourseHandlerMixin, GroupHandlerMixin
       itemTextHandler: (value: string | null) => value ?? "None",
     },
   ];
+  private actions: Actions = {
+    others: [
+      {
+        title: "Enroll",
+        icon: "mdi-account-plus",
+        color: "blue",
+        action: (student: HandledStudent) => {}, //this.enroll(student),
+        showAction: (student: HandledStudent) => student.group === null,
+      },
+      {
+        title: "Unenroll",
+        icon: "mdi-account-cancel",
+        color: "red",
+        action: (student: HandledStudent) => this.askUnenroll(student),
+        showAction: (student: HandledStudent) => student.group !== null,
+      },
+    ],
+  };
 
   private showCreateDialog = false;
   private createBodyValid = false;
@@ -160,7 +185,7 @@ export default class Course extends Mixins(CourseHandlerMixin, GroupHandlerMixin
     return this.createBodyValid && !this.createLoading;
   }
 
-  get handledEnrolledStudents() {
+  get handledEnrolledStudents(): HandledStudent[] {
     return this.enrolledStudents.map((student) => ({
       id: student.id,
       username: student.username,
@@ -169,11 +194,8 @@ export default class Course extends Mixins(CourseHandlerMixin, GroupHandlerMixin
     }));
   }
 
-  get filteredEnrolledStudents() {
-    return this.handledEnrolledStudents.filter((student) => {
-      console.log(student.group);  console.log(this.selectedGroup); let res = this.selectedGroup === null || student.group?.id === this.selectedGroup.id
-      console.log(res); return res;
-    });
+  get filteredEnrolledStudents(): HandledStudent[] {
+    return this.handledEnrolledStudents.filter((student) => this.selectedGroup === null || student.group?.id === this.selectedGroup.id);
   }
 
   get selectedGroup(): Group | null {
@@ -192,6 +214,33 @@ export default class Course extends Mixins(CourseHandlerMixin, GroupHandlerMixin
 
   toggle(index: number): void {
     this.selectedGroupIndex = this.selectedGroupIndex === index ? null : index;
+  }
+
+  async enroll(student: HandledStudent, groupId: string): Promise<void> {
+    if (student.group === null) {
+      await this.groupAddPartecipant(this.courseId, groupId, student.id);
+    }
+  }
+
+  askUnenroll(student: HandledStudent): void {
+    this.$store.dispatch(ActionTypes.SHOW_CONFIRM_DIALOG, {
+      text: `Are you sure that you want to unenroll ${student.username} from group ${student.group?.name ?? ""}?`,
+      callback: async (answer) => {
+        if (answer) {
+          try {
+            if (student.group) {
+              await this.groupRemovePartecipant(this.courseId, student.group.id, student.id);
+              const groupToChange = this.values.find((value) => value.id === student.group?.id);
+              if (groupToChange) {
+                groupToChange.partecipants = groupToChange.partecipants.filter((id) => id !== student.id);
+              }
+            }
+          } catch (error) {
+            console.error(error);
+          }
+        }
+      },
+    });
   }
 
   async remove(group: Group): Promise<void> {
