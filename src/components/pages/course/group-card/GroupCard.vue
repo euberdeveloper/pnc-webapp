@@ -23,10 +23,10 @@
       </span>
 
       <v-row align="center" justify="end">
-        <v-btn icon @click.prevent="$emit('edit')">
+        <v-btn icon @click.stop="$emit('edit')">
           <v-icon color="blue darken-3">mdi-pencil</v-icon>
         </v-btn>
-        <v-btn class="mr-2" icon @click.prevent="$emit('remove')">
+        <v-btn class="mr-2" icon @click.stop="$emit('remove')">
           <v-icon color="red">mdi-delete</v-icon>
         </v-btn>
       </v-row>
@@ -36,7 +36,6 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import { Location } from "vue-router";
 import { Group, TimeRange } from "@prebenorwegian/sdk";
 
 @Component
