@@ -41,7 +41,9 @@ export default class GroupHandlerMixin extends Vue {
       await this.$api.courses.groups(courseId).update(groupId, {
         name: body.name,
         description: body.description,
-        maxPartecipants: body.maxPartecipants
+        maxPartecipants: body.maxPartecipants,
+        lecturePeriod: body.lecturePeriod,
+        weekSchedule: body.weekSchedule,
       }, { alertType });
     } catch (error) {
       if (error) {

@@ -8,7 +8,11 @@
       </span>
     </v-card-title>
 
-    <v-card-text class="text-h6 font-weight-bold">"{{ group.description }}"</v-card-text>
+    <v-card-text class="text-h6">
+      <span>
+        "From <u><b>{{ lecturePeriod.start }}</b></u> to <u><b>{{ lecturePeriod.end }}</b></u>"
+      </span>
+    </v-card-text>
 
     <v-card-actions>
       <v-icon class="mr-1">mdi-account</v-icon>
@@ -46,6 +50,13 @@ export default class GroupCard extends Vue {
 
   get creation(): string {
     return this.group.creationDate.toLocaleDateString();
+  }
+
+  get lecturePeriod() {
+    return {
+      start: this.group.lecturePeriod.start.toLocaleDateString(),
+      end: this.group.lecturePeriod.end.toLocaleDateString(),
+    };
   }
 
   get groupRoute(): Location {
