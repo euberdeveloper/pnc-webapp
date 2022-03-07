@@ -15,7 +15,7 @@
       </v-row>
       <v-row>
         <v-col cols="12">
-          <pnc-base-table title="Students" :values="handledEnrolledStudents" :columns="columns" :rowBackgrounds="rowBackgrounds" />
+          <pnc-base-table title="Students" :values="filteredEnrolledStudents" :columns="columns" :rowBackgrounds="rowBackgrounds" :actions="actions" />
         </v-col>
       </v-row>
     </v-container>
@@ -43,19 +43,39 @@
         </v-col>
       </v-row>
       <v-row align="stretch" justify="start">
-        <v-col v-for="group of filteredGroups" :key="group.id" cols="12" sm="4">
-          <group-card style="height: 100%" :group="group" @edit="openEdit(group)" @remove="remove(group)" />
+        <v-col v-for="(group, index) of filteredGroups" :key="group.id" cols="12" sm="4">
+          <group-card
+            style="height: 100%"
+            :group="group"
+            :selected="index === selectedGroupIndex"
+            @edit="openEdit(group)"
+            @remove="remove(group)"
+            @toggle="toggle(index)"
+          />
         </v-col>
       </v-row>
     </v-container>
 
     <!-- CREATE DIALOG -->
-    <pnc-action-dialog title="New group" v-model="showCreateDialog" :disabled="!createBodyValid" @cancel="closeCreate(false)" @confirm="closeCreate(true)">
+    <pnc-action-dialog title="New group" v-model="showCreateDialog" :disabled="!createValid" @cancel="closeCreate(false)" @confirm="closeCreate(true)">
       <pnc-group-form v-if="showCreateDialog" v-model="createBody" :formValid.sync="createBodyValid" :groupsNames="groupsNames" class="mt-6" />
     </pnc-action-dialog>
     <!-- EDIT DIALOG -->
-    <pnc-action-dialog title="Edit group" v-model="showEditDialog" :disabled="!updateBodyValid" @cancel="closeEdit(false)" @confirm="closeEdit(true)">
+    <pnc-action-dialog title="Edit group" v-model="showEditDialog" :disabled="!updateValid" @cancel="closeEdit(false)" @confirm="closeEdit(true)">
       <pnc-group-form v-if="showEditDialog" v-model="updateBody" :formValid.sync="updateBodyValid" :groupsNames="groupsNames" class="mt-6" />
+    </pnc-action-dialog>
+    <!-- ENROLL DIALOG -->
+    <pnc-action-dialog title="Enroll student" v-model="showEnrollDialog" :disabled="!enrollValid" @cancel="closeEnroll(false)" @confirm="closeEnroll(true)">
+      <v-select
+        label="Group"
+        name="groupIdToEnroll"
+        clearable
+        item-text="name"
+        item-value="id"
+        :items="values"
+        :rules="[$validator.requiredText('Group')]"
+        v-model="groupIdToEnroll"
+      />
     </pnc-action-dialog>
   </pnc-base-page>
 </template>
@@ -71,12 +91,19 @@ import CourseHandlerMixin from "@/mixins/handlers/CourseHandlerMixin";
 import GroupHandlerMixin from "@/mixins/handlers/GroupHandlerMixin";
 
 import PncBasePage from "@/components/gears/bases/PncBasePage.vue";
-import PncBaseTable, { Column, RowColors } from "@/components/gears/bases/PncBaseTable.vue";
+import PncBaseTable, { Actions, Column, RowColors } from "@/components/gears/bases/PncBaseTable.vue";
 import PncActionDialog from "@/components/gears/dialogs/PncActionDialog.vue";
 import PncGroupForm from "@/components/gears/forms/PncGroupForm.vue";
 import GroupCard from "./group-card/GroupCard.vue";
 
 type GroupsUpdateBodyStrict = Required<GroupsUpdateBody> & { weekSchedule: WeekSchedule };
+
+interface HandledStudent {
+  id: string;
+  username: string;
+  email: string;
+  group: Group | null;
+}
 
 @Component({
   components: {
@@ -97,6 +124,7 @@ export default class Course extends Mixins(CourseHandlerMixin, GroupHandlerMixin
 
   private course: CourseType | null = null;
   private values: Group[] = [];
+  private selectedGroupIndex: number | null = null;
   private searchGroup = "";
   private backRoute: Location = { name: "dashboard-courses" };
 
@@ -116,10 +144,33 @@ export default class Course extends Mixins(CourseHandlerMixin, GroupHandlerMixin
     },
     {
       text: "Group",
-      value: "group",
-      itemTextHandler: (value: string | null) => value ?? 'None'
+      value: "group.name",
+      itemTextHandler: (value: string | null) => value ?? "None",
     },
   ];
+  private actions: Actions = {
+    others: [
+      {
+        title: "Enroll",
+        icon: "mdi-account-plus",
+        color: "blue",
+        action: (student: HandledStudent) => this.openEnroll(student),
+        showAction: (student: HandledStudent) => student.group === null,
+      },
+      {
+        title: "Unenroll",
+        icon: "mdi-account-cancel",
+        color: "red",
+        action: (student: HandledStudent) => this.askUnenroll(student),
+        showAction: (student: HandledStudent) => student.group !== null,
+      },
+    ],
+  };
+
+  private showEnrollDialog = false;
+  private enrollLoading = false;
+  private groupIdToEnroll: string | null = null;
+  private studentToEnroll: HandledStudent | null = null;
 
   private showCreateDialog = false;
   private createBodyValid = false;
@@ -130,6 +181,7 @@ export default class Course extends Mixins(CourseHandlerMixin, GroupHandlerMixin
   private showEditDialog = false;
   private updateBodyValid = false;
   private updateBody: GroupsUpdateBodyStrict | null = null;
+  private updateLoading = false;
   private updateId: string | null = null;
 
   /* GETTERS */
@@ -152,14 +204,33 @@ export default class Course extends Mixins(CourseHandlerMixin, GroupHandlerMixin
     return this.createBodyValid && !this.createLoading;
   }
 
-  get handledEnrolledStudents() {
-    return this.enrolledStudents.map(student => ({
+  get updateValid(): boolean {
+    return this.updateBodyValid && !this.updateLoading;
+  }
+
+  get enrollValid(): boolean {
+    return this.enrollBodyValid && !this.enrollLoading;
+  }
+
+  get handledEnrolledStudents(): HandledStudent[] {
+    return this.enrolledStudents.map((student) => ({
       id: student.id,
       username: student.username,
       email: student.email,
-      group: this.values.find(group => group.partecipants.includes(student.id))?.name ?? null,
+      group: this.values.find((group) => group.partecipants.includes(student.id)) ?? null,
     }));
+  }
 
+  get filteredEnrolledStudents(): HandledStudent[] {
+    return this.handledEnrolledStudents.filter((student) => this.selectedGroup === null || student.group?.id === this.selectedGroup.id);
+  }
+
+  get selectedGroup(): Group | null {
+    return this.selectedGroupIndex !== null ? this.values[this.selectedGroupIndex] : null;
+  }
+
+  get enrollBodyValid(): boolean {
+    return this.groupIdToEnroll !== null;
   }
 
   /* METHODS */
@@ -172,6 +243,31 @@ export default class Course extends Mixins(CourseHandlerMixin, GroupHandlerMixin
     return "";
   }
 
+  toggle(index: number): void {
+    this.selectedGroupIndex = this.selectedGroupIndex === index ? null : index;
+  }
+
+  askUnenroll(student: HandledStudent): void {
+    this.$store.dispatch(ActionTypes.SHOW_CONFIRM_DIALOG, {
+      text: `Are you sure that you want to unenroll ${student.username} from group ${student.group?.name ?? ""}?`,
+      callback: async (answer) => {
+        if (answer) {
+          try {
+            if (student.group) {
+              await this.groupRemovePartecipant(this.courseId, student.group.id, student.id);
+              const groupToChange = this.values.find((value) => value.id === student.group?.id);
+              if (groupToChange) {
+                groupToChange.partecipants = groupToChange.partecipants.filter((id) => id !== student.id);
+              }
+            }
+          } catch (error) {
+            console.error(error);
+          }
+        }
+      },
+    });
+  }
+
   async remove(group: Group): Promise<void> {
     this.$store.dispatch(ActionTypes.SHOW_CONFIRM_DIALOG, {
       text: `Are you sure you want to remove the group "${group.name}"?`,
@@ -182,6 +278,36 @@ export default class Course extends Mixins(CourseHandlerMixin, GroupHandlerMixin
         }
       },
     });
+  }
+
+  openEnroll(student: HandledStudent): void {
+    this.studentToEnroll = student;
+    this.showEnrollDialog = true;
+  }
+  async closeEnroll(save: boolean): Promise<void> {
+    if (!save) {
+      this.groupIdToEnroll = null;
+      this.showEnrollDialog = false;
+      return;
+    }
+
+    if (this.enrollValid && this.groupIdToEnroll && this.studentToEnroll) {
+      try {
+        this.enrollLoading = true;
+        await this.groupAddPartecipant(this.courseId, this.groupIdToEnroll, this.studentToEnroll.id);
+        const group = this.values.find((group) => group.id === this.groupIdToEnroll);
+        if (group) {
+          group.partecipants.push(this.studentToEnroll.id);
+        }
+
+        this.groupIdToEnroll = null;
+        this.showEnrollDialog = false;
+      } catch (error) {
+        console.error(error);
+      } finally {
+        this.enrollLoading = false;
+      }
+    }
   }
 
   openCreate(): void {
@@ -271,11 +397,18 @@ export default class Course extends Mixins(CourseHandlerMixin, GroupHandlerMixin
       return;
     }
 
-    if (this.updateBodyValid && this.updateBody && this.updateId) {
-      await this.updateGroup(this.courseId, this.updateId, this.updateBody);
-      this.reflectUpdate(this.updateId, this.updateBody);
-      this.sprepareUpdateBody();
-      this.showEditDialog = false;
+    if (this.updateValid && this.updateBody && this.updateId) {
+      try {
+        this.updateLoading = true;
+        await this.updateGroup(this.courseId, this.updateId, this.updateBody);
+        this.reflectUpdate(this.updateId, this.updateBody);
+        this.sprepareUpdateBody();
+        this.showEditDialog = false;
+      } catch (error) {
+        console.error(error);
+      } finally {
+        this.updateLoading = false;
+      }
     }
   }
 

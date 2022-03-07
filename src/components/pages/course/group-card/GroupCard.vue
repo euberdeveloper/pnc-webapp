@@ -1,5 +1,5 @@
 <template>
-  <v-card :to="groupRoute" class="group-card mx-auto d-flex flex-column" color="#26c6da" dark>
+  <v-card @click="$emit('toggle')" class="group-card mx-auto d-flex flex-column" :color="backgroundColor" dark>
     <v-card-title>
       <span class="text-h6 font-weight-light d-flex" style="width: 100%">
         <span class="name">{{ group.name }}</span>
@@ -23,10 +23,10 @@
       </span>
 
       <v-row align="center" justify="end">
-        <v-btn icon @click.prevent="$emit('edit')">
+        <v-btn icon @click.stop="$emit('edit')">
           <v-icon color="blue darken-3">mdi-pencil</v-icon>
         </v-btn>
-        <v-btn class="mr-2" icon @click.prevent="$emit('remove')">
+        <v-btn class="mr-2" icon @click.stop="$emit('remove')">
           <v-icon color="red">mdi-delete</v-icon>
         </v-btn>
       </v-row>
@@ -36,7 +36,6 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import { Location } from "vue-router";
 import { Group, TimeRange } from "@prebenorwegian/sdk";
 
 @Component
@@ -45,6 +44,9 @@ export default class GroupCard extends Vue {
 
   @Prop({ type: Object, required: true })
   group!: Group;
+
+  @Prop({ type: Boolean, default: false })
+  selected!: boolean;
 
   /* GETTERS */
 
@@ -75,8 +77,8 @@ export default class GroupCard extends Vue {
     return `From <b>${this.lecturePeriod.start}</b> to <b>${this.lecturePeriod.end}</b> on ${weekScheduleDisplay}`;
   }
 
-  get groupRoute(): Location {
-    return { name: "dashboard-courses-id-groups-id", params: { courseId: this.group.courseId, groupId: this.group.id } };
+  get backgroundColor(): string {
+    return this.selected ? "#4dbb08" : "#26c6da";
   }
 
   /* METHODS */
