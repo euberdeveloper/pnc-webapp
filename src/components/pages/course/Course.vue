@@ -29,9 +29,9 @@
           <v-btn class="ml-4" depressed color="primary" @click="openCreate">ADD</v-btn>
         </v-col>
       </v-row>
-      <v-row align="start" justify="start">
+      <v-row align="stretch" justify="start">
         <v-col v-for="group of filteredGroups" :key="group.id" cols="12" sm="4">
-          <group-card :group="group" @edit="openEdit(group)" @remove="remove(group)" />
+          <group-card style="height: 100%" :group="group" @edit="openEdit(group)" @remove="remove(group)" />
         </v-col>
       </v-row>
     </v-container>

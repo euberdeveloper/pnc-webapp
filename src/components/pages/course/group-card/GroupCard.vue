@@ -1,5 +1,5 @@
 <template>
-  <v-card :to="groupRoute" class="group-card mx-auto" color="#26c6da" dark>
+  <v-card :to="groupRoute" class="group-card mx-auto d-flex flex-column" color="#26c6da" dark>
     <v-card-title>
       <span class="text-h6 font-weight-light d-flex" style="width: 100%">
         <span class="name">{{ group.name }}</span>
@@ -9,10 +9,10 @@
     </v-card-title>
 
     <v-card-text class="text-h6">
-      <span>
-        "From <u><b>{{ lecturePeriod.start }}</b></u> to <u><b>{{ lecturePeriod.end }}</b></u>"
-      </span>
+      <span v-html="displayGroupSchedule" />
     </v-card-text>
+
+    <v-spacer />
 
     <v-card-actions>
       <v-icon class="mr-1">mdi-account</v-icon>
@@ -37,7 +37,7 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { Location } from "vue-router";
-import { Group } from "@prebenorwegian/sdk";
+import { Group, TimeRange } from "@prebenorwegian/sdk";
 
 @Component
 export default class GroupCard extends Vue {
@@ -59,8 +59,30 @@ export default class GroupCard extends Vue {
     };
   }
 
+  get displayGroupSchedule(): string {
+    const weekScheduleDisplay = [
+      this.displayDaySchedule("Monday", this.group.weekSchedule.monday),
+      this.displayDaySchedule("Tuesday", this.group.weekSchedule.tuesday),
+      this.displayDaySchedule("Wednesday", this.group.weekSchedule.wednesday),
+      this.displayDaySchedule("Thursday", this.group.weekSchedule.thursday),
+      this.displayDaySchedule("Friday", this.group.weekSchedule.friday),
+      this.displayDaySchedule("Saturday", this.group.weekSchedule.saturday),
+      this.displayDaySchedule("Sunday", this.group.weekSchedule.sunday),
+    ]
+      .filter((value) => !!value)
+      .join(", ");
+
+    return `From <b>${this.lecturePeriod.start}</b> to <b>${this.lecturePeriod.end}</b> on ${weekScheduleDisplay}`;
+  }
+
   get groupRoute(): Location {
     return { name: "dashboard-courses-id-groups-id", params: { courseId: this.group.courseId, groupId: this.group.id } };
+  }
+
+  /* METHODS */
+
+  private displayDaySchedule(day: string, timeRange: TimeRange | null): string {
+    return timeRange ? `<b>${day}</b> (${timeRange.from} - ${timeRange.to})` : "";
   }
 }
 </script>
