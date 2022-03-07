@@ -2,7 +2,7 @@
   <v-container fluid>
     <v-row>
       <v-col cols="12">
-        <h3>Week schedule {{ formValid }} {{ internalFormValid }} {{ realFormValid }}</h3>
+        <h3>Week schedule</h3>
       </v-col>
     </v-row>
     <v-row class="my-1 pa-0">

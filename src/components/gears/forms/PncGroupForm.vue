@@ -1,7 +1,5 @@
 <template>
   <v-form v-model="inputsValid" @submit.prevent v-if="internalValue">
-    {{inputsValid}}<br>
-    {{weekScheduleFormValid}}
     <v-container fluid>
       <v-row align="center" justify="center">
         <v-col cols="6">
