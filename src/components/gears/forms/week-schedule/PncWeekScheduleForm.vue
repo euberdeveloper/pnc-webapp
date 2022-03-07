@@ -79,16 +79,33 @@ export default class PncWeekScheduleForm extends Vue {
   }
 
   get realFormValid() {
-    return Object.keys(this.internalValue).every((key) => {
-      const value: TimeRange | null = this.internalValue[key];
-      return value === null || (/^([01]\d|2[0-3]):([0-5]\d)$/.test(value.from) && /^([01]\d|2[0-3]):([0-5]\d)$/.test(value.to));
-    });
+    return (
+      this.validateWeekdayValue(this.internalValue.monday) &&
+      this.validateWeekdayValue(this.internalValue.tuesday) &&
+      this.validateWeekdayValue(this.internalValue.wednesday) &&
+      this.validateWeekdayValue(this.internalValue.thursday) &&
+      this.validateWeekdayValue(this.internalValue.friday) &&
+      this.validateWeekdayValue(this.internalValue.saturday) &&
+      this.validateWeekdayValue(this.internalValue.sunday)
+    );
+  }
+
+  /* METHODS */
+
+  private validateWeekdayValue(value: null | TimeRange): boolean {
+    return value === null || (/^([01]\d|2[0-3]):([0-5]\d)$/.test(value.from) && /^([01]\d|2[0-3]):([0-5]\d)$/.test(value.to));
   }
 
   /* WATCHERS */
 
   @Watch("realFormValid")
   watchRealFormValid() {
+    this.internalFormValid = this.realFormValid;
+  }
+
+  /* LIFE CYCLE */
+
+  created() {
     this.internalFormValid = this.realFormValid;
   }
 }

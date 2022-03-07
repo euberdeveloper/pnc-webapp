@@ -1,6 +1,6 @@
 
 import { Component, Vue } from "vue-property-decorator";
-import { Course, NotFoundError } from "@prebenorwegian/sdk";
+import { Course, NotFoundError, Student } from "@prebenorwegian/sdk";
 
 import { ActionTypes, AlertType } from "@/store";
 
@@ -26,6 +26,17 @@ export default class CourseHandlerMixin extends Vue {
     } catch (error) {
       if (error instanceof NotFoundError) {
         this.$store.dispatch(ActionTypes.ALERT, { message: `Course not found: ${error.message}`, alertType });
+      }
+      throw error;
+    }
+  }
+
+  async getCourseStudents(id: string, alertType = AlertType.ERRORS_QUEUE): Promise<Student[]> {
+    try {
+      return await this.$api.courses.getStudents(id, { alertType });
+    } catch (error) {
+      if (error) {
+        this.$store.dispatch(ActionTypes.ALERT, { message: `Error during enrolled students loading`, alertType });
       }
       throw error;
     }
