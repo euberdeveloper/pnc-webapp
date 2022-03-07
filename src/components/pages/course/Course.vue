@@ -10,6 +10,19 @@
     <v-container fluid class="px-6">
       <v-row align="center" justify="center">
         <v-col cols="12">
+          <h2>Enrolled students:</h2>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col cols="12">
+          <pnc-base-table title="Students" :values="enrolledStudents" :columns="columns" :rowBackgrounds="rowBackgrounds" />
+        </v-col>
+      </v-row>
+    </v-container>
+
+    <v-container fluid class="px-6">
+      <v-row align="center" justify="center">
+        <v-col cols="12">
           <h2>Groups:</h2>
         </v-col>
       </v-row>
@@ -50,7 +63,7 @@
 <script lang="ts">
 import { Component, Mixins, Prop } from "vue-property-decorator";
 import { Location } from "vue-router";
-import { Course as CourseType, Group, GroupsCreateBody, GroupsUpdateBody, WeekSchedule } from "@prebenorwegian/sdk";
+import { Course as CourseType, Group, GroupsCreateBody, GroupsUpdateBody, Student, WeekSchedule } from "@prebenorwegian/sdk";
 
 import { ActionTypes } from "@/store";
 
@@ -58,6 +71,7 @@ import CourseHandlerMixin from "@/mixins/handlers/CourseHandlerMixin";
 import GroupHandlerMixin from "@/mixins/handlers/GroupHandlerMixin";
 
 import PncBasePage from "@/components/gears/bases/PncBasePage.vue";
+import PncBaseTable, { Column, RowColors } from "@/components/gears/bases/PncBaseTable.vue";
 import PncActionDialog from "@/components/gears/dialogs/PncActionDialog.vue";
 import PncGroupForm from "@/components/gears/forms/PncGroupForm.vue";
 import GroupCard from "./group-card/GroupCard.vue";
@@ -67,6 +81,7 @@ type GroupsUpdateBodyStrict = Required<GroupsUpdateBody> & { weekSchedule: WeekS
 @Component({
   components: {
     PncBasePage,
+    PncBaseTable,
     PncActionDialog,
     PncGroupForm,
     GroupCard,
@@ -84,6 +99,22 @@ export default class Course extends Mixins(CourseHandlerMixin, GroupHandlerMixin
   private values: Group[] = [];
   private searchGroup = "";
   private backRoute: Location = { name: "dashboard-courses" };
+
+  private enrolledStudents: Student[] = [];
+  private columns: Column[] = [
+    {
+      text: "ID",
+      value: "id",
+    },
+    {
+      text: "Username",
+      value: "username",
+    },
+    {
+      text: "Email",
+      value: "email",
+    },
+  ];
 
   private showCreateDialog = false;
   private createBodyValid = false;
@@ -117,6 +148,14 @@ export default class Course extends Mixins(CourseHandlerMixin, GroupHandlerMixin
   }
 
   /* METHODS */
+
+  rowBackgrounds(item: Student): RowColors {
+    if (this.values.every((group) => !group.partecipants.includes(item.id))) {
+      return "soft-orange";
+    }
+
+    return "";
+  }
 
   async remove(group: Group): Promise<void> {
     this.$store.dispatch(ActionTypes.SHOW_CONFIRM_DIALOG, {
@@ -196,7 +235,7 @@ export default class Course extends Mixins(CourseHandlerMixin, GroupHandlerMixin
       description: value.description,
       maxPartecipants: value.maxPartecipants,
       lecturePeriod: value.lecturePeriod,
-      weekSchedule: value.weekSchedule
+      weekSchedule: value.weekSchedule,
     };
     this.updateId = value.id;
   }
@@ -244,6 +283,7 @@ export default class Course extends Mixins(CourseHandlerMixin, GroupHandlerMixin
   async created() {
     this.course = await this.getCourse(this.courseId);
     this.values = await this.getGroups(this.courseId);
+    this.enrolledStudents = await this.getCourseStudents(this.courseId);
   }
 }
 </script>
