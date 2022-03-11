@@ -1,3 +1,5 @@
+# 301 - Transferred to the [official organization](https://github.com/Preben-Norwegian-Community)
+
 # pnc-webapp
 The Web App of the Preben Norwegian Community software
 
